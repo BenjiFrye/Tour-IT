@@ -17,14 +17,50 @@
         android:background="@drawable/logo2_lighter_light_text"
         android:src="@drawable/logo2_lighter_light_text" />
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/button"
         android:layout_width="252dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="70dp"
         android:background="@drawable/btn_white_rounded"
+        android:fontFamily="@font/poppins_regular"
+        android:gravity="center_horizontal"
         android:text="Get started >>"
+        android:textAllCaps="false"
         android:textColor="@color/black"
+        android:textSize="19sp"
         app:backgroundTint="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="119dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Already have an account?"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/poppins_semibold"
+            android:gravity="top"
+            android:paddingStart="3dp"
+            android:paddingEnd="-25dp"
+            android:text="Log in here"
+            android:textAllCaps="false"
+            android:textSize="15sp" />
+    </LinearLayout>
 </LinearLayout>
