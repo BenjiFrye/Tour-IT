@@ -10,8 +10,21 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
+        android:layout_width="232dp"
         android:layout_height="205dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="120dp"
-        android:src="@drawable/Logo2_Lighter_LightText" />
+        android:background="@drawable/logo2_lighter_light_text"
+        android:src="@drawable/logo2_lighter_light_text" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button"
+        android:layout_width="252dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/btn_white_rounded"
+        android:text="Get started >>"
+        android:textColor="@color/black"
+        app:backgroundTint="@color/white" />
 </LinearLayout>
