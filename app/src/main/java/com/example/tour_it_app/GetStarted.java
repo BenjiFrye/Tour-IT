@@ -5,9 +5,8 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 public class GetStarted extends AppCompatActivity {
 
@@ -15,7 +14,7 @@ public class GetStarted extends AppCompatActivity {
     // ---------------- * Component declaration * ------------------ //
 
     private AppCompatButton btnGetStarted;
-    private Button btnLogin1;
+    private TextView btnLogin1;
 
     // ------------------------------------------------------------ //
 
@@ -26,7 +25,7 @@ public class GetStarted extends AppCompatActivity {
         setContentView(R.layout.activity_get_started);
 
         btnGetStarted = findViewById(R.id.btn_get_started);
-        btnLogin1 = findViewById(R.id.btn_login_here);
+        btnLogin1 = findViewById(R.id.btn_login_here_2);
 
         // --------------------------------- * Listeners * -------------------------------------- //
 
