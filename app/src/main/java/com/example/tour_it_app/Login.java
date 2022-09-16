@@ -42,7 +42,8 @@ public class Login extends AppCompatActivity {
         btnLogin2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Go to Home page
+                Intent i = new Intent(Login.this, MainActivity.class);
+                startActivity(i);
             }
         });
 
