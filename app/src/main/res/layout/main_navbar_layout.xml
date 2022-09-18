@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/main_nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#85000000"
+        android:elevation="10dp">
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/mainNavView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@drawable/backdrop_main_nav"
+            android:paddingTop="80dp"
+            app:elevation="16dp"
+            app:itemBackground="@android:color/transparent"
+            app:itemIconPadding="29dp"
+            app:itemIconTint="@color/black"
+            app:itemTextAppearance="@style/MainNavigationViewTextStyle"
+            app:itemTextColor="@color/black"
+            app:menu="@menu/main_nav_bar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtNav_Name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="John Smith"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/txtNav_Email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="example.someone@gmail.com" />
+            </LinearLayout>
+        </com.google.android.material.navigation.NavigationView>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+</LinearLayout>

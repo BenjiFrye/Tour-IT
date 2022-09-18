@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         //Drawer layout instance to toggle menu icon to open
         //and back button to close drawer
         mainDrawer = findViewById(R.id.layout);
-
         //------------------------------------------------------------------------------------------
 
 
