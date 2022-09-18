@@ -3,4 +3,8 @@
     <style name="BottomNavigationViewTextStyle">
         <item name="fontFamily">@font/poppins_semibold</item>
     </style>
+    <style name="MainNavigationViewTextStyle">
+        <item name="fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">17dp</item>
+    </style>
 </resources>
