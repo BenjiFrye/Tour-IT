@@ -4,14 +4,19 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout mainDrawer;
+    private Button btnSearch;
 
 
     @Override
@@ -25,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         mainDrawer = findViewById(R.id.layout);
         //------------------------------------------------------------------------------------------
 
+        //-------------------------------- Search Drawer layout ------------------------------------
+        btnSearch = findViewById(R.id.btnMainSearch);
+        //------------------------------------------------------------------------------------------
 
     }
 
@@ -56,4 +64,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     //----------------------------------- Drawer Management Code -----------------------------------
+
+
+    public void ClickSearch(View view) {
+        ShowSearchDialogue();
+    }
+    private void ShowSearchDialogue() {
+        SearchFragment dialog = new SearchFragment();
+        dialog.show(getSupportFragmentManager(), "Search Dialogue");
+    }
 }

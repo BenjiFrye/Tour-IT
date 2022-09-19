@@ -38,8 +38,9 @@
         android:layout_gravity="center_vertical|end"
         android:layout_weight="1"
         android:background="@android:color/transparent"
+        android:onClick="ClickSearch"
         app:icon="@drawable/icon_main_search"
         app:iconSize="35dp"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
 </LinearLayout>
