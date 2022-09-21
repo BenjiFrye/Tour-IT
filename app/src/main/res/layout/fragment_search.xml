@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,7 +9,7 @@
     tools:context=".SearchFragment">
 
     <LinearLayout
-        android:layout_width="347dp"
+        android:layout_width="match_parent"
         android:layout_height="339dp"
         android:orientation="vertical">
 
@@ -21,9 +21,9 @@
 
             <EditText
                 android:id="@+id/txtSearchLandmark"
-                android:layout_width="264dp"
+                android:layout_width="303dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="30dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/background_text_search"
                 android:ems="10"
@@ -66,7 +66,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/poppins_regular"
                 android:text="Suggestions"
@@ -85,7 +85,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"
                 android:letterSpacing="0.03"
-                android:paddingLeft="25dp"
+                android:paddingLeft="40dp"
                 android:text="Table Mountain"
                 android:textAllCaps="false"
                 android:textColor="@color/custom15"
@@ -104,7 +104,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"
                 android:letterSpacing="0.03"
-                android:paddingLeft="25dp"
+                android:paddingLeft="40dp"
                 android:text="Robben Island"
                 android:textAllCaps="false"
                 android:textColor="@color/custom15"
@@ -123,7 +123,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"
                 android:letterSpacing="0.03"
-                android:paddingLeft="25dp"
+                android:paddingLeft="40dp"
                 android:text="@string/waterfront"
                 android:textAllCaps="false"
                 android:textColor="@color/custom15"
@@ -142,7 +142,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"
                 android:letterSpacing="0.03"
-                android:paddingLeft="25dp"
+                android:paddingLeft="40dp"
                 android:text="Lion's Head"
                 android:textAllCaps="false"
                 android:textColor="@color/custom15"
@@ -161,7 +161,7 @@
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"
                 android:letterSpacing="0.03"
-                android:paddingLeft="25dp"
+                android:paddingLeft="40dp"
                 android:text="Signal Hill"
                 android:textAllCaps="false"
                 android:textColor="@color/custom15"
@@ -172,4 +172,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
