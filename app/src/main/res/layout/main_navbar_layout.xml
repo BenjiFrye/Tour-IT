@@ -13,7 +13,7 @@
         android:id="@+id/main_nav_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#85000000"
+        android:background="@android:color/transparent"
         android:elevation="10dp">
 
         <com.google.android.material.navigation.NavigationView

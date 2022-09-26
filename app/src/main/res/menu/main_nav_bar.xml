@@ -6,7 +6,7 @@
         <item android:enabled="false"/>
 
         <item
-        android:id="@+id/main_home"
+        android:id="@+id/bttm_home"
         android:icon="@drawable/icon_home"
         android:title="Home" />
 

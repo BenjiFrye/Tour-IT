@@ -2,13 +2,10 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity"
-    tools:ignore="SpeakableTextPresentCheck">
-
+    tools:context=".AccountFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,15 +14,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
             <include
-                layout="@layout/main_burger_menu"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_gravity="start"
+                layout="@layout/other_burger_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </LinearLayout>
 
@@ -47,8 +43,7 @@
                     app:elevation="0dp"
                     app:fabCradleMargin="10dp"
                     app:fabCradleRoundedCornerRadius="10dp"
-                    app:fabCradleVerticalOffset="10dp"
-                    >
+                    app:fabCradleVerticalOffset="10dp">
 
                     <com.google.android.material.bottomnavigation.BottomNavigationView
                         android:id="@+id/bottomNavView"
@@ -70,10 +65,10 @@
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <LinearLayout
-                android:id="@+id/fragment_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"></LinearLayout>
+
         </FrameLayout>
 
     </LinearLayout>
