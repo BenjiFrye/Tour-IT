@@ -15,6 +15,7 @@
         android:background="@android:color/transparent"
         android:onClick="ClickMenu"
         app:icon="@drawable/icon_burger_menu"
+        app:iconSize="25dp"
         app:iconTint="@color/white"
         tools:ignore="SpeakableTextPresentCheck" />
 
@@ -29,7 +30,7 @@
         android:gravity="bottom|center_vertical"
         android:text="LocationName"
         android:textColor="@color/white"
-        android:textSize="19sp" />
+        android:textSize="17sp" />
 
     <Button
         android:id="@+id/btnMainSearch"
@@ -40,7 +41,7 @@
         android:background="@android:color/transparent"
         android:onClick="ClickSearch"
         app:icon="@drawable/icon_main_search"
-        app:iconSize="35dp"
+        app:iconSize="25dp"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
 </LinearLayout>
