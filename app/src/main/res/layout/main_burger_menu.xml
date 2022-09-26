@@ -9,7 +9,7 @@
 
     <Button
         android:id="@+id/btnBurger"
-        android:layout_width="99dp"
+        android:layout_width="108dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:background="@android:color/transparent"
