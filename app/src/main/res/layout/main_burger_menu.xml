@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,39 +9,37 @@
 
     <Button
         android:id="@+id/btnBurger"
-        android:layout_width="108dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:background="@android:color/transparent"
         android:onClick="ClickMenu"
         app:icon="@drawable/icon_burger_menu"
-        app:iconSize="25dp"
-        app:iconTint="@color/white"
+        app:iconSize="28dp"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/txtPageName"
-        android:layout_width="189dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_gravity="center|center_horizontal"
         android:drawableStart="@drawable/icon_pin"
         android:fontFamily="@font/poppins_regular"
         android:gravity="bottom|center_vertical"
         android:text="LocationName"
         android:textColor="@color/white"
-        android:textSize="17sp" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/btnMainSearch"
-        android:layout_width="34dp"
-        android:layout_height="45dp"
+        android:layout_width="78dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|end"
-        android:layout_weight="1"
+        android:layout_marginEnd="-5dp"
         android:background="@android:color/transparent"
         android:onClick="ClickSearch"
         app:icon="@drawable/icon_main_search"
-        app:iconSize="25dp"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        app:iconSize="28dp"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-</LinearLayout>
+</FrameLayout>

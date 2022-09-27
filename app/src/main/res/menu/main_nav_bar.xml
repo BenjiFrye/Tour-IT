@@ -6,7 +6,7 @@
         <item android:enabled="false"/>
 
         <item
-        android:id="@+id/bttm_home"
+        android:id="@+id/main_home"
         android:icon="@drawable/icon_home"
         android:title="Home" />
 
@@ -23,20 +23,19 @@
             android:iconTint="@drawable/selector"/>
 
         <item
-         android:id="@+id/main_acc"
-         android:icon="@drawable/icon_acc"
-         android:title="Account"
-            android:iconTint="@drawable/selector"/>
+            android:id="@+id/main_sett"
+            android:icon="@drawable/icon_settings"
+            android:iconTint="@drawable/selector"
+            android:title="Settings" />
 
         <item android:enabled="false"/>
         <item android:enabled="false"/>
 
         <item
-         android:id="@+id/main_sett"
-         android:icon="@drawable/icon_settings"
-         android:title="Settings"
-            android:iconTint="@drawable/selector"/>
-
+            android:id="@+id/main_acc"
+            android:icon="@drawable/icon_acc"
+            android:iconTint="@drawable/selector"
+            android:title="Account" />
         <item
          android:id="@+id/main_logout"
          android:icon="@drawable/icon_logout"
