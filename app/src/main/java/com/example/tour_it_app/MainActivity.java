@@ -2,9 +2,11 @@ package com.example.tour_it_app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.opengl.Visibility;
 import android.os.Bundle;
@@ -35,7 +37,6 @@ public class MainActivity extends AppCompatActivity{
     SettingsFragment settingsFrag = new SettingsFragment();
     FavouritesFragment favouritesFrag = new FavouritesFragment();
     AccountFragment accFrag = new AccountFragment();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,15 +119,14 @@ public class MainActivity extends AppCompatActivity{
                         bottomView.setSelectedItemId(R.id.bttm_settings);
                         return true;
                     case R.id.main_logout:
-                        ///
+                        LogoutDialogue();
                         return true;
                 }
                 return false;
             }
         });
-
-
     }
+    //----------------------------------------------------------------------------------------------
 
 
     //Change appearance of top bar when home page is open
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity{
             drawerLayout.closeDrawer(GravityCompat.START);
         }
     }
-    //----------------------------------- Drawer Management Code -----------------------------------
+    //----------------------------------------------------------------------------------------------
 
 
     //------------------------------------ Search Dialogue -----------------------------------------
@@ -177,5 +177,37 @@ public class MainActivity extends AppCompatActivity{
         SearchFragment dialog = new SearchFragment();
         dialog.show(getSupportFragmentManager(), "Search Dialogue");
     }
-    //------------------------------------ Search Dialogue -----------------------------------------
+    //----------------------------------------------------------------------------------------------
+
+
+    //------------------------------------ Logout Dialogue -----------------------------------------
+    private void LogoutDialogue()
+    {
+        Dialog dialog = new Dialog(this, R.style.DialogStyle);
+        dialog.setCanceledOnTouchOutside(false); //To prevent a user from clicking away
+        dialog.setContentView(R.layout.dialogue_logout);
+
+        AppCompatButton btnLogout = dialog.findViewById(R.id.btnYes);
+        AppCompatButton btnDontLogout = dialog.findViewById(R.id.btnNo);
+
+        btnLogout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                startActivity(new Intent(getApplicationContext(), GetStarted.class));
+                dialog.dismiss();
+            }
+        });
+
+        btnDontLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+    //----------------------------------------------------------------------------------------------
 }

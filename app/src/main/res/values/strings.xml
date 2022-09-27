@@ -4,7 +4,7 @@
     <string name="nav_open">Open</string>
     <string name="nav_close">Close</string>
     <string name="waterfront">V&amp;A Waterfront</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="logout">Are you sure you want to logout? Your progress will be saved.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="map_key" translatable="false">
         AIzaSyApmwTYKuY286rVrGi4qQ-d9DOT_TuxWNs
