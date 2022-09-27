@@ -1,11 +1,10 @@
-package com.example.tour_it_app;
+package com.example.tour_it_app.fragments.others;
 
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.Gravity;
@@ -13,7 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
+
+import com.example.tour_it_app.R;
 
 /**
  * A simple {@link Fragment} subclass.

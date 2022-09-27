@@ -1,4 +1,4 @@
-package com.example.tour_it_app;
+package com.example.tour_it_app.fragments.others;
 
 import android.os.Bundle;
 
@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.tour_it_app.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AccountFragment extends Fragment {

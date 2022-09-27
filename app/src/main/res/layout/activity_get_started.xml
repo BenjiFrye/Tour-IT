@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/get_started_background"
     android:orientation="vertical"
-    tools:context=".GetStarted" >
+    tools:context=".startup.GetStarted" >
 
     <ImageView
         android:id="@+id/imageView"

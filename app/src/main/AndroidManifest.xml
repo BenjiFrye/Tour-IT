@@ -22,13 +22,13 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Register"
+            android:name=".startup.Register"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".startup.Login"
             android:exported="false" />
         <activity
-            android:name=".GetStarted"
+            android:name=".startup.GetStarted"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.example.tour_it_app;
+package com.example.tour_it_app.fragments.others;
 
 import android.os.Bundle;
 
@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SettingsFragment extends Fragment {
+import com.example.tour_it_app.R;
 
-    public SettingsFragment() {
+public class FavouritesFragment extends Fragment {
+
+    public FavouritesFragment() {
         // Required empty public constructor
     }
 
@@ -18,8 +20,6 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        return inflater.inflate(R.layout.fragment_favourites, container, false);
     }
-
-
 }

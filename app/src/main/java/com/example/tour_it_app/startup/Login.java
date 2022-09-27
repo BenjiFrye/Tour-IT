@@ -1,4 +1,4 @@
-package com.example.tour_it_app;
+package com.example.tour_it_app.startup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -6,9 +6,11 @@ import androidx.appcompat.widget.AppCompatButton;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tour_it_app.MainActivity;
+import com.example.tour_it_app.R;
 
 public class Login extends AppCompatActivity {
 

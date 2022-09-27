@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SearchFragment">
+    tools:context=".fragments.others.SearchFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="339dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -79,7 +79,7 @@
             <Button
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
-                android:layout_height="37dp"
+                android:layout_height="43dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"
@@ -98,7 +98,7 @@
             <Button
                 android:id="@+id/button3"
                 android:layout_width="match_parent"
-                android:layout_height="37dp"
+                android:layout_height="43dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"
@@ -117,7 +117,7 @@
             <Button
                 android:id="@+id/button4"
                 android:layout_width="match_parent"
-                android:layout_height="37dp"
+                android:layout_height="43dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"
@@ -136,7 +136,7 @@
             <Button
                 android:id="@+id/button5"
                 android:layout_width="match_parent"
-                android:layout_height="37dp"
+                android:layout_height="43dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"
@@ -155,7 +155,7 @@
             <Button
                 android:id="@+id/button6"
                 android:layout_width="match_parent"
-                android:layout_height="37dp"
+                android:layout_height="43dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/poppins_regular"
                 android:gravity="start|center_vertical"

@@ -8,17 +8,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.os.Bundle;
-import android.text.Layout;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.tour_it_app.fragments.others.AccountFragment;
+import com.example.tour_it_app.fragments.others.FavouritesFragment;
+import com.example.tour_it_app.fragments.landmarks.HomeFragment;
+import com.example.tour_it_app.fragments.others.SearchFragment;
+import com.example.tour_it_app.fragments.others.SettingsFragment;
+import com.example.tour_it_app.startup.GetStarted;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -97,6 +98,8 @@ public class MainActivity extends AppCompatActivity{
                         bottomView.setSelectedItemId(R.id.bttm_home);
                         return true;
                     case R.id.main_search:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, homeFrag).commit();
+                        bottomView.setSelectedItemId(R.id.bttm_home);
                         ShowSearchDialogue();
                         closeDrawer(mainDrawer);
                         return true;

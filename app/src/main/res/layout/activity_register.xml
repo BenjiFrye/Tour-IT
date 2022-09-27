@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/custom12"
     android:orientation="vertical"
-    tools:context=".Register">
+    tools:context=".startup.Register">
 
     <ImageView
         android:id="@+id/imageView2"
