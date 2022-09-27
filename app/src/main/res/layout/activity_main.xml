@@ -33,6 +33,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <LinearLayout
+                android:id="@+id/fragment_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"></LinearLayout>
+
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,13 +75,7 @@
                 </com.google.android.material.bottomappbar.BottomAppBar>
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <LinearLayout
-                android:id="@+id/fragment_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"></LinearLayout>
         </FrameLayout>
-
     </LinearLayout>
 
     <RelativeLayout

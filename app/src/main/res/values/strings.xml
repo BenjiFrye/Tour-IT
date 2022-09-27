@@ -6,4 +6,7 @@
     <string name="waterfront">V&amp;A Waterfront</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="map_key" translatable="false">
+        AIzaSyApmwTYKuY286rVrGi4qQ-d9DOT_TuxWNs
+    </string>
 </resources>
