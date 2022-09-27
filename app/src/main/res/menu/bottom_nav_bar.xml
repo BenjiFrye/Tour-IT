@@ -17,7 +17,7 @@
 
     <!-- Invisible item -->
     <item
-        android:id="@+id/invisible"
+        android:id="@+id/bttm_invisible"
         android:visible="false"
         android:title="Account" />
 </menu>
