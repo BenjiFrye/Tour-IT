@@ -48,8 +48,6 @@ public class Register extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
     private Users user;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

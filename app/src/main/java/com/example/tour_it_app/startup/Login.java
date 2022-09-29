@@ -1,38 +1,54 @@
 package com.example.tour_it_app.startup;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import org.w3c.dom.Text;
 
 public class Login extends AppCompatActivity {
 
-    // ---------------- * Component declaration * ------------------ //
-
+    //Component variables
     private AppCompatButton btnLogin2;
     private AppCompatButton btnRegister;
     private TextView txtForgotPassword;
+    private EditText txtEmail;
+    private EditText txtPassword;
 
-    // ------------------------------------------------------------ //
+    //Firebase variables
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Finding ID's
         btnLogin2 = findViewById(R.id.btn_login);
         btnRegister = findViewById(R.id.btn_register);
         txtForgotPassword = findViewById(R.id.btn_forgot_password);
+        txtEmail = findViewById(R.id.edtLoginEmail);
+        txtPassword = findViewById(R.id.edtLoginPass);
 
-        // --------------------------------- * Listeners * -------------------------------------- //
+        //New instance
+        mAuth = FirebaseAuth.getInstance();
 
+        //Listeners
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -44,8 +60,7 @@ public class Login extends AppCompatActivity {
         btnLogin2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Login.this, MainActivity.class);
-                startActivity(i);
+                LoginUser();
             }
         });
 
@@ -55,6 +70,46 @@ public class Login extends AppCompatActivity {
                 Toast.makeText(Login.this, "Forgot password dialogue",Toast.LENGTH_SHORT).show();
             }
         });
-        // -------------------------------------------------------------------------------------- //
+
+    }
+
+    private void LoginUser() {
+
+        //Retrieving email and password string values
+        String email = txtEmail.getText().toString().trim();
+        String password = txtPassword.getText().toString().trim();
+
+        //Check for email and password combination in firebase authentication
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task)
+            {
+                if (task.isSuccessful())
+                {
+                    //Retrieve now logged in user
+                    final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                    //Check if their email has been verified
+                    if (!currentUser.isEmailVerified())
+                    {
+                        //If email has not been verified
+                        Toast.makeText(Login.this, "Unable to login. Please verify your email", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        //If email has been valid and password and email combination is authenticated
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
+                    }
+                }
+                else
+                {
+                    //If email and password combination fails to authenticate
+                    Toast.makeText(Login.this, "Unable to authenticate email and password combination. " +
+                            "Please make sure this account exists.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
