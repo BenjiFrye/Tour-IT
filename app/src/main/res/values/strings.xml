@@ -12,4 +12,5 @@
     </string>
     <string name="account_created">Your account has been created.</string>
     <string name="verify_email">A verification link has been sent to your email. Please verify your account before logging in.</string>
+    <string name="change_password">If you would like to change your password then please enter your email. A reset link will be sent.</string>
 </resources>

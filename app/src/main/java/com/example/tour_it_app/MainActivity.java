@@ -9,24 +9,35 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tour_it_app.fragments.others.AccountFragment;
 import com.example.tour_it_app.fragments.others.FavouritesFragment;
 import com.example.tour_it_app.fragments.landmarks.HomeFragment;
 import com.example.tour_it_app.fragments.others.SearchFragment;
 import com.example.tour_it_app.fragments.others.SettingsFragment;
+import com.example.tour_it_app.object_classes.Users;
 import com.example.tour_it_app.startup.GetStarted;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity{
 
-    //Variables
+    //Component Variables
     private NavigationView sideNavView;
     private BottomNavigationView bottomView;
     private DrawerLayout mainDrawer;
@@ -38,6 +49,18 @@ public class MainActivity extends AppCompatActivity{
     SettingsFragment settingsFrag = new SettingsFragment();
     FavouritesFragment favouritesFrag = new FavouritesFragment();
     AccountFragment accFrag = new AccountFragment();
+
+    //Firebase variables
+    private FirebaseUser fUser;
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase db;
+    private DatabaseReference dbRef = db.getReference();
+
+    //Type variables
+    private String UserID;
+    private Users users;
+    public static String currentEmail = "email"; //holds email of currently logged in user
+    public static String currentName = "name"; //holds email of currently logged in user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +79,18 @@ public class MainActivity extends AppCompatActivity{
         sideNavView = findViewById(R.id.mainNavView);
         txtHeading = findViewById(R.id.txtPageName);
 
+        //New firebase instances
+        mAuth = FirebaseAuth.getInstance();
+        fUser = mAuth.getCurrentUser();
+        UserID = fUser.getUid();
+
         //by default, load the home screen
         SetTopBarMain();
         bottomView.setSelectedItemId(R.id.bttm_home);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout,homeFrag).commit();
+
+        //Run method that retrieves details of currently logged in user
+        FetchUserDetails();
 
         //Bottom Navigation Bar menu item On Click
         bottomView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -171,6 +202,43 @@ public class MainActivity extends AppCompatActivity{
     }
     //----------------------------------------------------------------------------------------------
 
+    //---------------------------- Getting currently logged in user details ------------------------
+    public void FetchUserDetails() {
+
+        //Query based on current user ID
+        Query query = dbRef.child("Users").child(UserID).child("Account").orderByChild("userID").equalTo(UserID);
+
+        //check if current user is logged in
+        if (fUser != null) {
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            //Retrieving user details
+                            Users accUser = ds.getValue(Users.class);
+                            currentEmail = accUser.getEmail();
+                            currentName = accUser.getFirstName() + " " + accUser.getLastName();
+                            Log.d("Email","accUser");
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("error", error.getMessage());
+                }
+            });
+
+        } else {
+            //No user is logged in
+            Toast.makeText(this,"No user is logged in.",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    //----------------------------------------------------------------------------------------------
+
 
     //------------------------------------ Search Dialogue -----------------------------------------
     public void ClickSearch(View view) {
@@ -213,4 +281,6 @@ public class MainActivity extends AppCompatActivity{
         dialog.show();
     }
     //----------------------------------------------------------------------------------------------
+
+
 }

@@ -182,7 +182,6 @@ public class Login extends AppCompatActivity {
             }
         });
 
-
         dialog.show();
 
     }
