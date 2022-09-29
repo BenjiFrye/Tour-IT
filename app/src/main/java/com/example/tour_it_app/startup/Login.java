@@ -66,7 +66,13 @@ public class Login extends AppCompatActivity {
         btnLogin2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //Check that user has entered their email and password
+                if (!txtEmail.getText().toString().isEmpty() && !txtPassword.getText().toString().isEmpty()) {
                 LoginUser();
+                } else {
+                    Toast.makeText(Login.this, "Please enter both your email and password.",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
