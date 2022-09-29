@@ -1,12 +1,16 @@
 package com.example.tour_it_app.startup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +18,8 @@ import android.widget.Toast;
 import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,12 +73,13 @@ public class Login extends AppCompatActivity {
         txtForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Login.this, "Forgot password dialogue",Toast.LENGTH_SHORT).show();
+                ResetPassword(view);
             }
         });
 
     }
 
+    //-------------------------------Logging user in implementation---------------------------------
     private void LoginUser() {
 
         //Retrieving email and password string values
@@ -112,4 +119,66 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+    //----------------------------------------------------------------------------------------------
+
+    //-------------------------------- Forgot Password Dialogue ------------------------------------
+    private void ResetPassword(View view) {
+
+        //New dialogue instance
+        Dialog dialog = new Dialog(this, R.style.DialogStyle);
+
+        //Prevent user from click away
+        dialog.setCanceledOnTouchOutside(false);
+        //Show register dialogue layout
+        dialog.setContentView(R.layout.dialogue_reset_password);
+
+        //Finding Id's
+        Button btnChange = dialog.findViewById(R.id.btnChangePass);
+        Button btnCancel = dialog.findViewById(R.id.btnCancelReset);
+        EditText txtChangeEmail = dialog.findViewById(R.id.edtChangeEmail);
+
+        btnChange.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (!txtChangeEmail.getText().toString().isEmpty()) {
+
+                    String email = txtChangeEmail.getText().toString();
+
+                    mAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>()
+                    {
+                        @Override
+                        public void onSuccess(Void aVoid)
+                        {
+                            dialog.dismiss();
+                            Toast.makeText(Login.this,"A reset link has been sent to your email.", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener()
+                    {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            Toast.makeText(Login.this,"Email could not be found. Please make sure this email is registered.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else
+                {
+                    Toast.makeText(Login.this, "Please enter your email",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+
+    }
+    //----------------------------------------------------------------------------------------------
 }
