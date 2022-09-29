@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EdgeEffect;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tour_it_app.MainActivity;
@@ -27,7 +28,9 @@ import com.google.firebase.auth.FirebaseAuth;
 public class AccountFragment extends Fragment {
 
     //Component variables
-    private EditText txtEmail;
+    private EditText edtEmail;
+    private TextView txtName;
+    private TextView txtEmail;
     private AppCompatButton btnResetPass;
     private Activity activity = getActivity();
 
@@ -50,11 +53,20 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         //Finding ID's
-        txtEmail = getView().findViewById(R.id.edtAccEmail);
+        edtEmail = getView().findViewById(R.id.edtAccEmail);
+        txtName = getView().findViewById(R.id.txtAccName);
+        txtEmail = getView().findViewById(R.id.txtAccEmail);
         btnResetPass = getView().findViewById(R.id.btnConPassword);
 
+        //New instances
+        mAuth = FirebaseAuth.getInstance();
         MainActivity mainAct = new MainActivity();
+
+        //Updating user details on layout
+        String currentName = mainAct.currentName;
         String currentEmail = mainAct.currentEmail;
+        txtName.setText(currentName);
+        txtEmail.setText(currentEmail);
 
         //Listener
         btnResetPass.setOnClickListener(new View.OnClickListener() {
@@ -64,18 +76,16 @@ public class AccountFragment extends Fragment {
                 //Check that an email has been entered
                 if (!txtEmail.getText().toString().isEmpty())
                 {
-                    String email = txtEmail.getText().toString();
+                    String email = edtEmail.getText().toString();
 
                     //Check that the email matches the email that is used to log in
                     if (currentEmail.equals(email)) {
-                        ResetPassword(email);
+                       ResetPassword(email);
                     }
                     else {
                         //If email does not match current logged in email
-                        Toast.makeText(getActivity(),"Please enter your email that you logged in with",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Please enter the email that you logged in with",Toast.LENGTH_SHORT).show();
                     }
-
-
                 } else {
                     //If no email is entered
                     Toast.makeText(getActivity(),"Please enter your email",Toast.LENGTH_LONG).show();

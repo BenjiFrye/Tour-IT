@@ -85,7 +85,7 @@
         android:textSize="15sp" />
 
     <TextView
-        android:id="@+id/txtAccEmail2"
+        android:id="@+id/text_help"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"

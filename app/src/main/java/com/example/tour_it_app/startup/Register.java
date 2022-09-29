@@ -241,7 +241,7 @@ public class Register extends AppCompatActivity {
         user.setEmail(email);
         user.setUserID(userID);
 
-        ref.setValue(user);
+        ref.push().setValue(user);
     }
     //----------------------------------------------------------------------------------------------
 }

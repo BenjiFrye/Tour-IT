@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity{
     private DrawerLayout mainDrawer;
     private Button btnSearch;
     private TextView txtHeading;
+    private TextView txtNavName;
+    private TextView txtNavEmail;
 
     //New instances
     HomeFragment homeFrag = new HomeFragment();
@@ -51,21 +54,20 @@ public class MainActivity extends AppCompatActivity{
     AccountFragment accFrag = new AccountFragment();
 
     //Firebase variables
-    private FirebaseUser fUser;
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase db;
-    private DatabaseReference dbRef = db.getReference();
+    static FirebaseDatabase db;
 
     //Type variables
     private String UserID;
-    private Users users;
-    public static String currentEmail = "email"; //holds email of currently logged in user
-    public static String currentName = "name"; //holds email of currently logged in user
+    public static String currentEmail = "someone.example@gmail.com"; //holds email of currently logged in user
+    public static String currentName = "Guest User"; //holds email of currently logged in user
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Run method that retrieves details of currently logged in user
+        FetchUserDetails();
 
         //---------------------------- Main Navigation Drawer layout -------------------------------
         //Drawer layout instance to toggle menu icon to open
@@ -78,19 +80,14 @@ public class MainActivity extends AppCompatActivity{
         bottomView = findViewById(R.id.bottomNavView);
         sideNavView = findViewById(R.id.mainNavView);
         txtHeading = findViewById(R.id.txtPageName);
-
-        //New firebase instances
-        mAuth = FirebaseAuth.getInstance();
-        fUser = mAuth.getCurrentUser();
-        UserID = fUser.getUid();
+        txtNavName = findViewById(R.id.txtNav_Name);
+        txtNavEmail = findViewById(R.id.txtNav_Email);
 
         //by default, load the home screen
         SetTopBarMain();
         bottomView.setSelectedItemId(R.id.bttm_home);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout,homeFrag).commit();
 
-        //Run method that retrieves details of currently logged in user
-        FetchUserDetails();
 
         //Bottom Navigation Bar menu item On Click
         bottomView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -205,12 +202,15 @@ public class MainActivity extends AppCompatActivity{
     //---------------------------- Getting currently logged in user details ------------------------
     public void FetchUserDetails() {
 
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+
         //Query based on current user ID
+        UserID = fUser.getUid().toString();
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         Query query = dbRef.child("Users").child(UserID).child("Account").orderByChild("userID").equalTo(UserID);
 
         //check if current user is logged in
         if (fUser != null) {
-
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity{
                             Users accUser = ds.getValue(Users.class);
                             currentEmail = accUser.getEmail();
                             currentName = accUser.getFirstName() + " " + accUser.getLastName();
+                            SetNavDrawerUserDetails();
                             Log.d("Email","accUser");
                         }
                     }
@@ -236,6 +237,13 @@ public class MainActivity extends AppCompatActivity{
             Toast.makeText(this,"No user is logged in.",Toast.LENGTH_SHORT).show();
         }
 
+    }
+    //----------------------------------------------------------------------------------------------
+
+    //----------------------------- Setting the name nav drawer ------------------------------------
+    private void SetNavDrawerUserDetails() {
+        txtNavName.setText(currentName);
+        txtNavEmail.setText(currentEmail);
     }
     //----------------------------------------------------------------------------------------------
 

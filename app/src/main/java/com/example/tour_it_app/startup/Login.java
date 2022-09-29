@@ -30,14 +30,14 @@ import org.w3c.dom.Text;
 public class Login extends AppCompatActivity {
 
     //Component variables
-    private AppCompatButton btnLogin2;
+    private AppCompatButton btnLogin;
     private AppCompatButton btnRegister;
     private TextView txtForgotPassword;
     private EditText txtEmail;
     private EditText txtPassword;
 
     //Firebase variables
-    private FirebaseAuth mAuth;
+    FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         //Finding ID's
-        btnLogin2 = findViewById(R.id.btn_login);
+        btnLogin = findViewById(R.id.btn_login);
         btnRegister = findViewById(R.id.btn_register);
         txtForgotPassword = findViewById(R.id.btn_forgot_password);
         txtEmail = findViewById(R.id.edtLoginEmail);
@@ -53,6 +53,10 @@ public class Login extends AppCompatActivity {
 
         //New instance
         mAuth = FirebaseAuth.getInstance();
+
+        //TODO: TEMPORARY LOGIN
+        txtEmail.setText("amber.bruil@gmail.com");
+        txtPassword.setText("amberisawe");
 
         //Listeners
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +67,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        btnLogin2.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -79,7 +83,7 @@ public class Login extends AppCompatActivity {
         txtForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ResetPassword(view);
+                ResetPassword();
             }
         });
 
@@ -100,7 +104,6 @@ public class Login extends AppCompatActivity {
             {
                 if (task.isSuccessful())
                 {
-                    //Retrieve now logged in user
                     final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                     //Check if their email has been verified
@@ -128,7 +131,7 @@ public class Login extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
 
     //-------------------------------- Forgot Password Dialogue ------------------------------------
-    private void ResetPassword(View view) {
+    private void ResetPassword() {
 
         //New dialogue instance
         Dialog dialog = new Dialog(this, R.style.DialogStyle);
