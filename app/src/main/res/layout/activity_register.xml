@@ -17,7 +17,7 @@
         app:srcCompat="@drawable/logo2_lighter_light_text" />
 
     <EditText
-        android:id="@+id/edtEmail2"
+        android:id="@+id/edtName"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -34,7 +34,7 @@
         android:textSize="17sp" />
 
     <EditText
-        android:id="@+id/edtEmail3"
+        android:id="@+id/edtSurname"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -51,7 +51,7 @@
         android:textSize="17sp" />
 
     <EditText
-        android:id="@+id/edtEmail4"
+        android:id="@+id/edtEmail"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -68,7 +68,7 @@
         android:textSize="17sp" />
 
     <EditText
-        android:id="@+id/edtEmail5"
+        android:id="@+id/edtPass"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -85,7 +85,7 @@
         android:textSize="17sp" />
 
     <EditText
-        android:id="@+id/edtEmail6"
+        android:id="@+id/edtConPass"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

@@ -28,7 +28,7 @@
         android:textSize="22sp" />
 
     <EditText
-        android:id="@+id/edtEmail"
+        android:id="@+id/edtLoginEmail"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -45,7 +45,7 @@
         android:textSize="17sp" />
 
     <EditText
-        android:id="@+id/edtPassword"
+        android:id="@+id/edtLoginPass"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

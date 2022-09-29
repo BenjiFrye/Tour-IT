@@ -149,7 +149,7 @@
         android:layout_width="119dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="25dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/poppins_regular"
         android:text="@string/button_logout"
@@ -159,10 +159,10 @@
 
     <ImageView
         android:id="@+id/imageView6"
-        android:layout_width="112dp"
-        android:layout_height="48dp"
+        android:layout_width="145dp"
+        android:layout_height="62dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:src="@drawable/logo2_lighter_dark_text" />
 
 </LinearLayout>

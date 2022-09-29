@@ -10,4 +10,6 @@
     <string name="map_key" translatable="false">
         AIzaSyApmwTYKuY286rVrGi4qQ-d9DOT_TuxWNs
     </string>
+    <string name="account_created">Your account has been created.</string>
+    <string name="verify_email">A verification link has been sent to your email. Please verify your account before logging in.</string>
 </resources>
