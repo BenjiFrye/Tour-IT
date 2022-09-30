@@ -53,9 +53,6 @@ public class MainActivity extends AppCompatActivity{
     FavouritesFragment favouritesFrag = new FavouritesFragment();
     AccountFragment accFrag = new AccountFragment();
 
-    //Firebase variables
-    static FirebaseDatabase db;
-
     //Type variables
     private String UserID;
     public static String currentEmail = "someone.example@gmail.com"; //holds email of currently logged in user
@@ -88,7 +85,6 @@ public class MainActivity extends AppCompatActivity{
         bottomView.setSelectedItemId(R.id.bttm_home);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout,homeFrag).commit();
 
-
         //Bottom Navigation Bar menu item On Click
         bottomView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
            @Override
@@ -108,7 +104,6 @@ public class MainActivity extends AppCompatActivity{
                        SetTopBarOther("Favourites");
                        return true;
                }
-
                return false;
            }
        });

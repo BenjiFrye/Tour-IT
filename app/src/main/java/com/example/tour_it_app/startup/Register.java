@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tour_it_app.R;
+import com.example.tour_it_app.data.SettingsData;
 import com.example.tour_it_app.object_classes.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +26,8 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Locale;
 
 public class Register extends AppCompatActivity {
 
@@ -61,6 +64,13 @@ public class Register extends AppCompatActivity {
         txtEmail = findViewById(R.id.edtEmail);
         txtPass = findViewById(R.id.edtPass);
         txtConPass = findViewById(R.id.edtConPass);
+
+        //TODO: TEMPORARY REGISTRATION
+        txtName.setText("");
+        txtSurname.setText("");
+        txtEmail.setText("");
+        txtPass.setText("");
+        txtConPass.setText("");
 
         //New instance
         user = new Users();
@@ -234,6 +244,10 @@ public class Register extends AppCompatActivity {
     //--------------------------Method to add the user to the database------------------------------
     private void AddUserToDatabase(String name, String surname, String email, String userID) {
 
+        //Ensuring both first letters of name and surname are capital
+        name = name.substring(0,1).toUpperCase() + name.substring(1);
+        surname = surname.substring(0,1).toUpperCase() + surname.substring(1);
+
         DatabaseReference ref = dbUsersRef.child(userID).child("Account");
 
         user.setFirstName(name);
@@ -242,6 +256,18 @@ public class Register extends AppCompatActivity {
         user.setUserID(userID);
 
         ref.push().setValue(user);
+        AddDefaultSettings(userID);
+    }
+    //----------------------------------------------------------------------------------------------
+
+    //----------------------------- Write default settings to db -----------------------------------
+    private void AddDefaultSettings(String userID) {
+
+        SettingsData data = new SettingsData();
+        DatabaseReference ref = dbUsersRef.child(userID).child("Settings");
+
+        ref.updateChildren(data.DefaultSystem());
+        ref.updateChildren(data.DefaultPreference());
     }
     //----------------------------------------------------------------------------------------------
 }

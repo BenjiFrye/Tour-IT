@@ -26,6 +26,7 @@
             android:textSize="15sp" />
 
         <RadioGroup
+            android:id="@+id/rgSystem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="38dp">
@@ -47,6 +48,23 @@
                 android:text="Imperial"
                 android:textSize="14sp" />
         </RadioGroup>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnConSys"
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="40dp"
+            android:background="@drawable/btn_white_rounded"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Confirm System"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <Space
             android:layout_width="match_parent"
@@ -74,6 +92,7 @@
             android:textSize="15sp" />
 
         <RadioGroup
+            android:id="@+id/rgPreference"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="38dp">
@@ -104,6 +123,23 @@
                 android:text="Historical"
                 android:textSize="14sp" />
         </RadioGroup>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnConPref"
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="40dp"
+            android:background="@drawable/btn_blue_rounded"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Confirm Preference"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
 
         <Space
             android:layout_width="match_parent"

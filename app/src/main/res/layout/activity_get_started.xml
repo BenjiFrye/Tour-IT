@@ -19,11 +19,11 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_get_started"
-        android:layout_width="233dp"
+        android:layout_width="217dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="70dp"
-        android:background="@drawable/btn_white_rounded"
+        android:background="@drawable/btn_get_started"
         android:fontFamily="@font/poppins_regular"
         android:paddingTop="5dp"
         android:text="Get started >>"

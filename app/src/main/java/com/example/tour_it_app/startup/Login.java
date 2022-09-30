@@ -55,8 +55,8 @@ public class Login extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         //TODO: TEMPORARY LOGIN
-        txtEmail.setText("amber.bruil@gmail.com");
-        txtPassword.setText("amberisawe");
+        txtEmail.setText("");
+        txtPassword.setText("");
 
         //Listeners
         btnRegister.setOnClickListener(new View.OnClickListener() {
