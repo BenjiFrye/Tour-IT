@@ -18,28 +18,13 @@
         app:iconSize="28dp"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <TextView
-        android:id="@+id/txtPageName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|center_horizontal"
-        android:drawableStart="@drawable/icon_pin"
-        android:fontFamily="@font/poppins_regular"
-        android:gravity="bottom|center_vertical"
-        android:text="LocationName"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/btnMainSearch"
-        android:layout_width="78dp"
-        android:layout_height="wrap_content"
+    <fragment
+        android:id="@+id/autoComplete_fragment"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_gravity="center_vertical|end"
-        android:layout_marginEnd="-5dp"
-        android:background="@android:color/transparent"
-        android:onClick="ClickSearch"
+        android:layout_marginLeft="60dp"
         app:icon="@drawable/icon_main_search"
-        app:iconSize="28dp"
-        tools:ignore="SpeakableTextPresentCheck" />
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 </FrameLayout>

@@ -1,5 +1,9 @@
 package com.example.tour_it_app;
 
+import static com.example.tour_it_app.fragments.landmarks.HomeFragment.mMap;
+import static com.example.tour_it_app.fragments.landmarks.HomeFragment.newMarker;
+
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -8,6 +12,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,6 +33,16 @@ import com.example.tour_it_app.fragments.others.SearchFragment;
 import com.example.tour_it_app.fragments.others.SettingsFragment;
 import com.example.tour_it_app.object_classes.Users;
 import com.example.tour_it_app.startup.GetStarted;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -36,16 +55,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity{
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
+public class MainActivity extends AppCompatActivity
+{
     //Component Variables
     private NavigationView sideNavView;
     private BottomNavigationView bottomView;
     private DrawerLayout mainDrawer;
-    private Button btnSearch;
+
+    //private Button btnSearch;
     private TextView txtHeading;
     private TextView txtNavName;
     private TextView txtNavEmail;
+
+    //Searching variables
+    private PlacesClient placesClient;
 
     //New instances
     HomeFragment homeFrag = new HomeFragment();
@@ -59,7 +86,8 @@ public class MainActivity extends AppCompatActivity{
     public static String currentName = "Guest User"; //holds email of currently logged in user
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -73,10 +101,10 @@ public class MainActivity extends AppCompatActivity{
         //------------------------------------------------------------------------------------------
 
         //Finding Id's
-        btnSearch = findViewById(R.id.btnMainSearch);
+        //btnSearch = findViewById(R.id.btnMainSearch);
         bottomView = findViewById(R.id.bottomNavView);
         sideNavView = findViewById(R.id.mainNavView);
-        txtHeading = findViewById(R.id.txtPageName);
+        //txtHeading = findViewById(R.id.txtPageName);
         txtNavName = findViewById(R.id.txtNav_Name);
         txtNavEmail = findViewById(R.id.txtNav_Email);
 
@@ -84,6 +112,69 @@ public class MainActivity extends AppCompatActivity{
         SetTopBarMain();
         bottomView.setSelectedItemId(R.id.bttm_home);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout,homeFrag).commit();
+
+        //------------------------------------ Suggestion code -------------------------------------
+        if (!Places.isInitialized())
+        {
+            Places.initialize(this, getString(R.string.map_key));
+        }
+        placesClient = Places.createClient(getApplication());
+        AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autoComplete_fragment);
+        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID,Place.Field.LAT_LNG, Place.Field.NAME));
+        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener()
+        {
+            @Override
+            public void onPlaceSelected(@NonNull Place place)
+            {
+                final LatLng latLng = place.getLatLng();
+
+                Log.i("LOG", "OnPlaceSelected: " + latLng.latitude + "\n" + latLng.latitude);
+
+                if (newMarker != null)
+                {
+                    newMarker.remove();
+                }
+
+                String location = place.getName();
+                List<Address> addressList = null;
+
+                if (location != null || !location.equals(""))
+                {
+                    Geocoder geocoder = new Geocoder(getApplication());
+                    try
+                    {
+                        addressList = geocoder.getFromLocationName(location, 1);
+                    }
+                    catch (IOException IOexception)
+                    {
+                        Log.e("ERROR: ", "IOexception: " + IOexception.getMessage());
+                    }
+
+                    if (addressList.size() > 0)
+                    {
+                        Address address = addressList.get(0);
+                        LatLng latLng2 = new LatLng(address.getLatitude(), address.getLongitude());
+                        newMarker = mMap.addMarker(new MarkerOptions().position(latLng2).title(location));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,10));
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplication(), "Location Not Found!",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(getApplication(), "Location Not Found!",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Status status)
+            {
+
+            }
+        });
+        //------------------------------------ Suggestion code -------------------------------------
 
         //Bottom Navigation Bar menu item On Click
         bottomView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -157,16 +248,16 @@ public class MainActivity extends AppCompatActivity{
 
     //Change appearance of top bar when home page is open
     private void SetTopBarMain() {
-        txtHeading.setText("LandmarkName");
-        txtHeading.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_pin,0,0,0);
-        btnSearch.setVisibility(View.VISIBLE);
+        //txtHeading.setText("LandmarkName");
+        //txtHeading.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_pin,0,0,0);
+        //btnSearch.setVisibility(View.VISIBLE);
     }
 
     //Change appearance of top bar if any other page is open
     private void SetTopBarOther(String heading) {
-        txtHeading.setText(heading);
-        txtHeading.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        btnSearch.setVisibility(View.INVISIBLE);
+        //txtHeading.setText(heading);
+        //txtHeading.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        //btnSearch.setVisibility(View.INVISIBLE);
     }
 
     //----------------------------------- Drawer Management Code -----------------------------------

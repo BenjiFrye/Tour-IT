@@ -29,7 +29,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Locale;
 
-public class Register extends AppCompatActivity {
+public class Register extends AppCompatActivity
+{
 
     //Component variables
     private AppCompatButton btnSignUp;
@@ -52,7 +53,8 @@ public class Register extends AppCompatActivity {
     private Users user;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
@@ -78,10 +80,11 @@ public class Register extends AppCompatActivity {
         fUser = mAuth.getCurrentUser();
 
         //Listeners
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
+        btnSignUp.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View view)
+            {
                 //Check if all fields are not empty and contain a value
                 if (!txtName.getText().toString().isEmpty() && !txtSurname.getText().toString().isEmpty() &&
                     !txtEmail.getText().toString().isEmpty() && !txtPass.getText().toString().isEmpty() &&
@@ -89,7 +92,8 @@ public class Register extends AppCompatActivity {
                 {
                     //Run method to check for input validation
                     CheckUserInput();
-                } else
+                }
+                else
                 {
                     //If one or more fields are empty
                     Toast.makeText(Register.this, "Please make sure all fields have been entered",Toast.LENGTH_LONG).show();
@@ -97,9 +101,11 @@ public class Register extends AppCompatActivity {
             }
         });
 
-        btnLogin3.setOnClickListener(new View.OnClickListener() {
+        btnLogin3.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                Intent i = new Intent(Register.this, Login.class);
                startActivity(i);
             }
@@ -112,7 +118,8 @@ public class Register extends AppCompatActivity {
      * ---------------------- SUMMARY: Registering Users implementation ----------------------------
      */
     //---------------Checking if all inputs are valid (email, password matching)--------------------
-    private void CheckUserInput() {
+    private void CheckUserInput()
+    {
 
         String email = txtEmail.getText().toString();
         String pass = txtPass.getText().toString();
@@ -122,79 +129,90 @@ public class Register extends AppCompatActivity {
         if (pass.equals(conPass))
         {
             //Check if length of password is 6 or more
-            if (pass.length() >= 6) {
-                if (ValidateEmail(email)) {
+            if (pass.length() >= 6)
+            {
+                if (ValidateEmail(email))
+                {
                     //If email is valid, run method to register user
                     RegisterUser(email, pass);
-                } else
+                }
+                else
                 {
                     //If the email is not valid
                     Toast.makeText(Register.this,"Invalid email! Please try again.",Toast.LENGTH_SHORT).show();
                 }
-            } else {
+            }
+            else
+            {
                 //If length of password is less than 6
                 Toast.makeText(Register.this, "Password must contain at least 6 characters.", Toast.LENGTH_SHORT).show();
             }
 
         }
-        else {
+        else
+        {
             //If passwords do not match
             Toast.makeText(Register.this,  "Passwords do not match. Please try again.", Toast.LENGTH_SHORT).show();
         }
-
     }
     //----------------------------------------------------------------------------------------------
 
     //------------------Check for validity of email. Return true if it's valid----------------------
-    private boolean ValidateEmail(String email) {
-
-        if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+    private boolean ValidateEmail(String email)
+    {
+        if (!email.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches())
+        {
             return true;
-        } else {
+        }
+        else
+        {
             return false;
         }
-
     }
     //----------------------------------------------------------------------------------------------
 
     //--------------------Register the user with authentication in firebase-------------------------
-    private void RegisterUser(String email, String password) {
+    private void RegisterUser(String email, String password)
+    {
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            SendVerificationEmail(email);
-
-                        } else
-                        {
-                            // If sign in fails, display error message to user
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(Register.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task)
+            {
+                if (task.isSuccessful())
+                {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "createUserWithEmail:success");
+                    SendVerificationEmail(email);
+                }
+                else
+                {
+                    // If sign in fails, display error message to user
+                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    Toast.makeText(Register.this, "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
     //----------------------------------------------------------------------------------------------
 
     //-------------------------Method to send a verification email to user--------------------------
-    private void SendVerificationEmail(String email) {
-
+    private void SendVerificationEmail(String email)
+    {
         //Retrieving string values of name and surname
         String name = txtName.getText().toString();
         String surname = txtSurname.getText().toString();
         userID = mAuth.getCurrentUser().getUid().toString();
 
-        fUser.sendEmailVerification().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        fUser.sendEmailVerification().addOnCompleteListener(this, new OnCompleteListener<Void>()
+        {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-                if (task.isSuccessful()) {
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (task.isSuccessful())
+                {
                     //If email has successfully been sent
                     DisplaySuccessDialogue();
 
@@ -216,8 +234,8 @@ public class Register extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
 
     //----------------------Method to display the Success message dialogue--------------------------
-    private void DisplaySuccessDialogue() {
-
+    private void DisplaySuccessDialogue()
+    {
         //New dialogue instance
         Dialog dialog = new Dialog(this, R.style.DialogStyle);
 
@@ -242,7 +260,8 @@ public class Register extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
 
     //--------------------------Method to add the user to the database------------------------------
-    private void AddUserToDatabase(String name, String surname, String email, String userID) {
+    private void AddUserToDatabase(String name, String surname, String email, String userID)
+    {
 
         //Ensuring both first letters of name and surname are capital
         name = name.substring(0,1).toUpperCase() + name.substring(1);
@@ -261,8 +280,8 @@ public class Register extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
 
     //----------------------------- Write default settings to db -----------------------------------
-    private void AddDefaultSettings(String userID) {
-
+    private void AddDefaultSettings(String userID)
+    {
         SettingsData data = new SettingsData();
         DatabaseReference ref = dbUsersRef.child(userID).child("Settings");
 

@@ -27,8 +27,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Text;
 
-public class Login extends AppCompatActivity {
-
+public class Login extends AppCompatActivity
+{
     //Component variables
     private AppCompatButton btnLogin;
     private AppCompatButton btnRegister;
@@ -40,7 +40,8 @@ public class Login extends AppCompatActivity {
     FirebaseAuth mAuth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -59,18 +60,21 @@ public class Login extends AppCompatActivity {
         txtPassword.setText("");
 
         //Listeners
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnRegister.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Intent i = new Intent(Login.this, Register.class);
                 startActivity(i);
             }
         });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View view)
+            {
                 //Check that user has entered their email and password
                 if (!txtEmail.getText().toString().isEmpty() && !txtPassword.getText().toString().isEmpty()) {
                 LoginUser();
@@ -80,7 +84,8 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
+        txtForgotPassword.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
                 ResetPassword();
@@ -90,8 +95,8 @@ public class Login extends AppCompatActivity {
     }
 
     //-------------------------------Logging user in implementation---------------------------------
-    private void LoginUser() {
-
+    private void LoginUser()
+    {
         //Retrieving email and password string values
         String email = txtEmail.getText().toString().trim();
         String password = txtPassword.getText().toString().trim();
@@ -131,7 +136,8 @@ public class Login extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
 
     //-------------------------------- Forgot Password Dialogue ------------------------------------
-    private void ResetPassword() {
+    private void ResetPassword()
+    {
 
         //New dialogue instance
         Dialog dialog = new Dialog(this, R.style.DialogStyle);
