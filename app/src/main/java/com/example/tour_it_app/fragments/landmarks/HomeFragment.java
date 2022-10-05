@@ -1,25 +1,42 @@
 package com.example.tour_it_app.fragments.landmarks;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
+import com.example.tour_it_app.startup.Login;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -29,8 +46,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
@@ -44,20 +63,27 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback
+public class HomeFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnPoiClickListener
 {
+    private static final int REQUEST_CODE = 44;
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 22;
+
     //FragmentMapsBinding binding;.
     SupportMapFragment mapFragment;
+    FusedLocationProviderClient client;
     public static GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     double currentLat = 0, currentLong = 0;
+    boolean permissionGrated;
 
     //Searching functionality
     private SearchView searchView;
     public static Marker newMarker = null;
     private PlacesClient placesClient;
-    //private PlacesClient placesClient;
+    TextView distance, duration, type_measure, title, address, other, number;
+    //Searching functionality
 
     //Destination code
     LatLng mDestination;
@@ -71,123 +97,73 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
+        //Checks if user has given need permissions
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+
+        }
+        else
+        {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+        }
+
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
         initializeMap();
+
         mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap)
     {
-        if (!Places.isInitialized())
-        {
-            Places.initialize(this, getString(R.string.map_key));
-        }
-        placesClient = Places.createClient(getContext());
+        Toast.makeText(getContext(), "I WAS CALLED", Toast.LENGTH_LONG).show();
+        getCurrentLocation();
+
 
         mMap = googleMap;
+        googleMap.setOnPoiClickListener(this);
 
-        googleMap.setOnPoiClickListener(pointOfInterest ->
+
+    }
+
+    @SuppressLint("MissingPermission")
+    public void getCurrentLocation()
+    {
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>()
         {
-            String x = "Latitude:" + pointOfInterest.latLng.latitude + " Longitude:" + pointOfInterest.latLng.longitude;
-            mDestination = new LatLng(pointOfInterest.latLng.latitude, pointOfInterest.latLng.longitude);
+            @Override
+            public void onSuccess(Location location)
+            {
+                if (location != null)
+                {
+                    Toast.makeText(getContext(), "I WAS RUN", Toast.LENGTH_LONG).show();
+                    currentLat = location.getLatitude();
+                    currentLong = location.getLongitude();
 
-            AlertDialog.Builder Menu = new AlertDialog.Builder(getContext());
+                    mMap.setMyLocationEnabled(true);
 
-            View viewInflated = LayoutInflater.from(getActivity()).inflate(R.layout.marker_details, (ViewGroup) getChildFragmentManager().findFragmentById(android.R.id.content), false);
-
-            View viewInflated2 = LayoutInflater.from(getActivity()).inflate(R.layout.marker_details, (ViewGroup) getChildFragmentManager().findFragmentById(android.R.id.content), false);
-            Menu.setView(viewInflated);
-            final AlertDialog alertDialog = Menu.create();
-            if (alertDialog.getWindow() != null)
-                alertDialog.getWindow().getAttributes();
-
-            title = viewInflated.findViewById(R.id.name);
-            address = viewInflated.findViewById(R.id.address);
-            number = viewInflated.findViewById(R.id.number);
-            other = viewInflated.findViewById(R.id.other);
-            btn_fav = viewInflated.findViewById(R.id.btn_add_fav);
-            btn_route = viewInflated.findViewById(R.id.btn_route);
-
-            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.PHONE_NUMBER, Place.Field.ADDRESS, Place.Field.OPENING_HOURS);
-
-            // Construct a request object, passing the place ID and fields array.
-            FetchPlaceRequest request = FetchPlaceRequest.newInstance(pointOfInterest.placeId, placeFields);
-
-            placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-                Place place = response.getPlace();
-                if (place.getOpeningHours() != null || place.getAddress() != null || place.getPhoneNumber() != null) {
-                    title.setText(place.getName());
-                    address.setText(place.getAddress());
-                    number.setText(place.getPhoneNumber());
-                    if (place.getOpeningHours() == null) {
-
-                    } else {
-                        other.setText("" + place.getOpeningHours().getWeekdayText());
-                    }
-
-                } else {
-                    title.setText(place.getName());
-                    address.setText(x);
-                    other.setText("");
+                    LatLng latLng = new LatLng(currentLat, currentLong);
+                    //MarkerOptions options = new MarkerOptions().position(latLng).title("I am here");
+                    //options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                    //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,17));
                 }
+            }
+        });
+    }
 
-                Log.i(TAG, "Place found: " + place.getName());
-            }).addOnFailureListener((exception) -> {
-                if (exception instanceof ApiException) {
-                    ApiException apiException = (ApiException) exception;
-                    int statusCode = apiException.getStatusCode();
-                    // Handle error with given status code.
-                    Log.e(TAG, "Place not found: " + exception.getMessage());
-                }
-            });
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 44)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+
+            }
         }
-
-
-        Dexter.withContext(getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener()
-        {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse)
-            {
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                {
-                    return;
-                }
-                mMap.setMyLocationEnabled(true);
-                fusedLocationProviderClient.getLastLocation().addOnFailureListener(new OnFailureListener()
-                {
-                    @Override
-                    public void onFailure(@NonNull Exception e)
-                    {
-                        Toast.makeText(getContext(), "error" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<Location>()
-                {
-                    @Override
-                    public void onSuccess(Location location)
-                    {
-                        currentLat = location.getLatitude();
-                        currentLong = location.getLongitude();
-
-                        LatLng latLng = new LatLng(currentLat, currentLong);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,17));
-                    }
-                });
-            }
-
-            @Override
-            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse)
-            {
-                Toast.makeText(getContext(), "Permission" + permissionDeniedResponse.getPermissionName() + "" + "was denied!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken)
-            {
-                permissionToken.continuePermissionRequest();
-            }
-        }).check();
     }
 
     @Override
@@ -207,5 +183,55 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
         locationRequest.setSmallestDisplacement(16);
         locationRequest.setFastestInterval(3000);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+    }
+
+    @Override
+    public void onPoiClick(@NonNull PointOfInterest poi)
+    {
+        Toast.makeText(getContext(), "YOU CLICKED ON A POI", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "\nClicked: " + poi.name
+                                        + "\nPlace ID:" + poi.placeId
+                                        + "\nLatitude:" + poi.latLng.latitude + " Longitude:" + poi.latLng.longitude, Toast.LENGTH_SHORT).show();
+
+        Dialog dialog = new Dialog(getContext(), R.style.DialogStyle);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setContentView(R.layout.marker_details);
+
+        TextView markerName = dialog.findViewById(R.id.markerName);
+        TextView markerAddress = dialog.findViewById(R.id.markerAddress);
+        TextView markerNumber = dialog.findViewById(R.id.markerNumber);
+        TextView markerOther = dialog.findViewById(R.id.markerOther);
+
+        markerName.setText(poi.name.toString());
+        markerAddress.setText("PLACEHOLDER: 21 Barry Road");
+        markerNumber.setText("PLACEHOLDER: 081 485 3711");
+        markerOther.setText("PLACEHOLDER: It's a ugly house");
+
+        Button btn_Route = dialog.findViewById(R.id.btn_route);
+        Button btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
+
+        btn_Route.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //TODO: ADD CODE TO NAVIGATE THE USER HERE
+
+                Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+        btn_add_fav.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //TODO: ADD CODE TO ADD THIS LOCATION TO THEIR FAVOURITES
+
+                Toast.makeText(getContext(), "YOU CLICKED: Add to Favourites", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }
