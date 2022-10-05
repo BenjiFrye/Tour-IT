@@ -38,6 +38,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity
     private TextView txtHeading;
     private TextView txtNavName;
     private TextView txtNavEmail;
+    private TextView txtLandmarkName;
 
     //Searching variables
     private PlacesClient placesClient;
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity
         //txtHeading = findViewById(R.id.txtPageName);
         txtNavName = findViewById(R.id.txtNav_Name);
         txtNavEmail = findViewById(R.id.txtNav_Email);
+        txtLandmarkName = findViewById(R.id.txtLandmarkName);
 
         //by default, load the home screen
         SetTopBarMain();
@@ -136,6 +140,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 String location = place.getName();
+                txtLandmarkName.setText(location);
                 List<Address> addressList = null;
 
                 if (location != null || !location.equals(""))
@@ -154,12 +159,16 @@ public class MainActivity extends AppCompatActivity
                     {
                         Address address = addressList.get(0);
                         LatLng latLng2 = new LatLng(address.getLatitude(), address.getLongitude());
-                        newMarker = mMap.addMarker(new MarkerOptions().position(latLng2).title(location));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,10));
+                        double latitude = Math.round(address.getLatitude());
+                        double longitude = Math.round(address.getLongitude());
+                        newMarker = mMap.addMarker(new MarkerOptions()
+                                .position(latLng2)
+                                .title(location).snippet("Latitude: " + latitude + " Longitude: " + longitude));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,13));
                     }
                     else
                     {
-                        Toast.makeText(getApplication(), "Location Not Found!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplication(), "More than one location found!",Toast.LENGTH_SHORT).show();
                     }
                 }
                 else
@@ -167,6 +176,15 @@ public class MainActivity extends AppCompatActivity
                     Toast.makeText(getApplication(), "Location Not Found!",Toast.LENGTH_SHORT).show();
                 }
             }
+
+
+
+
+
+
+
+
+
 
             @Override
             public void onError(@NonNull Status status)

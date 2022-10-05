@@ -18,13 +18,26 @@
         app:iconSize="28dp"
         tools:ignore="SpeakableTextPresentCheck" />
 
+    <TextView
+        android:id="@+id/txtLandmarkName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Landmark"
+        android:textSize="22dp"
+        android:textColor="@color/custom9"
+        android:fontFamily="@font/poppins_regular"
+        android:layout_gravity="center_vertical|center"
+        android:maxLines="2"
+        />
+
     <fragment
         android:id="@+id/autoComplete_fragment"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         android:layout_gravity="center_vertical|end"
         android:layout_marginLeft="60dp"
         app:icon="@drawable/icon_main_search"
-        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:layout_width="50dp"
         android:layout_height="match_parent"
         />
 </FrameLayout>

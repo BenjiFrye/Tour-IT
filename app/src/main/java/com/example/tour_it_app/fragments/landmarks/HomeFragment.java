@@ -1,6 +1,7 @@
 package com.example.tour_it_app.fragments.landmarks;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -10,12 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -28,12 +31,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback
 {
@@ -46,7 +56,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
     //Searching functionality
     private SearchView searchView;
     public static Marker newMarker = null;
+    private PlacesClient placesClient;
     //private PlacesClient placesClient;
+
+    //Destination code
+    LatLng mDestination;
+    //Destination code
 
     public HomeFragment()
     {
@@ -64,7 +79,70 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap)
     {
+        if (!Places.isInitialized())
+        {
+            Places.initialize(this, getString(R.string.map_key));
+        }
+        placesClient = Places.createClient(getContext());
+
         mMap = googleMap;
+
+        googleMap.setOnPoiClickListener(pointOfInterest ->
+        {
+            String x = "Latitude:" + pointOfInterest.latLng.latitude + " Longitude:" + pointOfInterest.latLng.longitude;
+            mDestination = new LatLng(pointOfInterest.latLng.latitude, pointOfInterest.latLng.longitude);
+
+            AlertDialog.Builder Menu = new AlertDialog.Builder(getContext());
+
+            View viewInflated = LayoutInflater.from(getActivity()).inflate(R.layout.marker_details, (ViewGroup) getChildFragmentManager().findFragmentById(android.R.id.content), false);
+
+            View viewInflated2 = LayoutInflater.from(getActivity()).inflate(R.layout.marker_details, (ViewGroup) getChildFragmentManager().findFragmentById(android.R.id.content), false);
+            Menu.setView(viewInflated);
+            final AlertDialog alertDialog = Menu.create();
+            if (alertDialog.getWindow() != null)
+                alertDialog.getWindow().getAttributes();
+
+            title = viewInflated.findViewById(R.id.name);
+            address = viewInflated.findViewById(R.id.address);
+            number = viewInflated.findViewById(R.id.number);
+            other = viewInflated.findViewById(R.id.other);
+            btn_fav = viewInflated.findViewById(R.id.btn_add_fav);
+            btn_route = viewInflated.findViewById(R.id.btn_route);
+
+            List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.PHONE_NUMBER, Place.Field.ADDRESS, Place.Field.OPENING_HOURS);
+
+            // Construct a request object, passing the place ID and fields array.
+            FetchPlaceRequest request = FetchPlaceRequest.newInstance(pointOfInterest.placeId, placeFields);
+
+            placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+                Place place = response.getPlace();
+                if (place.getOpeningHours() != null || place.getAddress() != null || place.getPhoneNumber() != null) {
+                    title.setText(place.getName());
+                    address.setText(place.getAddress());
+                    number.setText(place.getPhoneNumber());
+                    if (place.getOpeningHours() == null) {
+
+                    } else {
+                        other.setText("" + place.getOpeningHours().getWeekdayText());
+                    }
+
+                } else {
+                    title.setText(place.getName());
+                    address.setText(x);
+                    other.setText("");
+                }
+
+                Log.i(TAG, "Place found: " + place.getName());
+            }).addOnFailureListener((exception) -> {
+                if (exception instanceof ApiException) {
+                    ApiException apiException = (ApiException) exception;
+                    int statusCode = apiException.getStatusCode();
+                    // Handle error with given status code.
+                    Log.e(TAG, "Place not found: " + exception.getMessage());
+                }
+            });
+        }
+
 
         Dexter.withContext(getContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener()
         {
