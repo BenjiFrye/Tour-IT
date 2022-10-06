@@ -35,6 +35,7 @@ import com.example.tour_it_app.object_classes.Users;
 import com.example.tour_it_app.startup.GetStarted;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity
     private TextView txtLandmarkName;
 
     //Searching variables
-    private PlacesClient placesClient;
+    public static PlacesClient placesClient;
 
     //New instances
     HomeFragment homeFrag = new HomeFragment();
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         }
         placesClient = Places.createClient(getApplication());
         AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autoComplete_fragment);
-        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID,Place.Field.LAT_LNG, Place.Field.NAME));
+        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
         autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener()
         {
             @Override
@@ -164,7 +165,10 @@ public class MainActivity extends AppCompatActivity
                         double longitude = Math.round(address.getLongitude());
                         newMarker = mMap.addMarker(new MarkerOptions()
                                 .position(latLng2)
-                                .title(location).snippet("Latitude: " + latitude + " Longitude: " + longitude));
+                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.logo1_blacktext))  GET THE ICON FIRST
+                                .title(location)
+                                .snippet("Latitude: " + latitude + " Longitude: " + longitude)
+                                .snippet("Click For more details"));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,13));
                     }
                     else
@@ -178,22 +182,15 @@ public class MainActivity extends AppCompatActivity
                 }
             }
 
-
-
-
-
-
-
-
-
-
             @Override
             public void onError(@NonNull Status status)
             {
 
             }
-        });
-        //------------------------------------ Suggestion code -------------------------------------
+        });//------------------------------------ Suggestion code -------------------------------------
+
+
+
 
         //Bottom Navigation Bar menu item On Click
         bottomView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {

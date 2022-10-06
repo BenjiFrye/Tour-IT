@@ -2,22 +2,25 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="350dp"
     android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/search_bar">
 
         <TextView
             android:id="@+id/markerName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:textSize="25sp"
-            android:text="title">
+            android:gravity="center"
+            android:text="LandMarkTitle">
 
         </TextView>
 
@@ -29,7 +32,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
-            android:text="here" />
+            android:text="51 Erica Road" />
 
         <TextView
             android:id="@+id/markerNumber"
@@ -38,7 +41,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:text="phone number">
+            android:text="+27 81 485 3711">
 
         </TextView>
 
@@ -50,7 +53,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="26dp"
-            android:text="other">
+            android:text="Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean">
 
         </TextView>
 
