@@ -99,17 +99,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public static GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     double currentLat = 0, currentLong = 0;
-    boolean permissionGrated;
 
     //Searching functionality
-    private SearchView searchView;
     public static Marker newMarker = null;
-    TextView distance, duration, type_measure, title, address, other, number;
     //Searching functionality
-
-    //Destination code
-    LatLng mDestination;
-    //Destination code
 
     public HomeFragment()
     {
@@ -193,14 +186,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
     }
 
+    private void direction2()
+    {
+
+    }
+
     private void direction() // LatLng currentLocation, LatLng destination SIGNATURE TO BE ADDED
     {
         Toast.makeText(getContext(), "Direction 1", Toast.LENGTH_LONG).show();
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         String url = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
                 .buildUpon()
-                .appendQueryParameter("destination", "-6.9218571, 107.6048254") // Where you want to go AKA the maker through the Find Routes button
-                .appendQueryParameter("origin", "-6.9249233, 107.6345122") // Current Location
+                .appendQueryParameter("destination", "-6.913823, 107.608983") // + lat + ", " + lng   Where you want to go AKA the maker through the Find Routes button
+                .appendQueryParameter("origin", "-6.916072, 107.641126") //  + currentLat + ", " + currentLng    Current Location
                 .appendQueryParameter("mode", "driving") // Will you be walking, driving or jogging
                 .appendQueryParameter("key", "AIzaSyApmwTYKuY286rVrGi4qQ-d9DOT_TuxWNs").toString();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>()
@@ -398,6 +396,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     public void markerInteraction(PointOfInterest poi)
     {
+
         //----------------------------- Code to display a dialog box -------------------------------
         // Used when a user clicks on a POI on google maps, AKA Burger King -> Give me more info
 
@@ -424,8 +423,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View view)
             {
                 //TODO: ADD CODE TO NAVIGATE THE USER HERE
-
                 Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
+
+                double latitude = poi.latLng.latitude;
+                double longitude = poi.latLng.longitude;
+
                 direction();
                 dialog.dismiss();
             }
