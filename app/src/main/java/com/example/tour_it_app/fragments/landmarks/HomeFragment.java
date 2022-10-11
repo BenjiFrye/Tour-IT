@@ -93,9 +93,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private static final int REQUEST_CODE = 44;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 22;
 
-    //FragmentMapsBinding binding;.
     SupportMapFragment mapFragment;
-   // FusedLocationProviderClient client;
     public static GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     double currentLat = 0, currentLong = 0;
@@ -151,7 +149,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void onInfoWindowClick(@NonNull Marker marker)
     {
         markerInteraction(marker);
-        Toast.makeText(getContext(), "YOU CLICK THE SNIPPET", Toast.LENGTH_LONG).show();
     }
 
     @SuppressLint("MissingPermission")
@@ -461,9 +458,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         TextView markerOther = dialog.findViewById(R.id.markerOther);
 
         markerName.setText(poi.getTitle());
-        markerAddress.setText("PLACEHOLDER: 21 Barry Road");
-        markerNumber.setText("PLACEHOLDER: 081 485 3711");
-        markerOther.setText("PLACEHOLDER: It's a ugly house");
+      //  markerAddress.setText("PLACEHOLDER: 21 Barry Road");
+       // markerNumber.setText("PLACEHOLDER: 081 485 3711");
+       // markerOther.setText("PLACEHOLDER: It's a ugly house");
 
         Button btn_Route = dialog.findViewById(R.id.btn_route);
         Button btn_add_fav = dialog.findViewById(R.id.btn_add_fav);

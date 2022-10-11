@@ -1,88 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="350dp"
-    android:layout_gravity="center">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/search_bar">
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/markerName"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:text="LandMarkTitle">
+            android:layout_height="85dp"
+            android:background="@color/custom16">
 
-        </TextView>
+            <TextView
+                android:id="@+id/markerName"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                android:text="LandMarkTitle"
+                android:textSize="22sp">
+
+            </TextView>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/markerAddress"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="10dp"
-            android:text="51 Erica Road" />
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/poppins_regular"
+            android:text="51 Erica Road"
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/markerNumber"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="+27 81 485 3711">
+            android:fontFamily="@font/poppins_regular"
+            android:text="+27 81 485 3711"
+            android:textColor="@color/black">
 
         </TextView>
 
-        <TextView
-            android:id="@+id/markerOther"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/btn_add_fav"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="26dp"
-            android:text="Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean">
+            android:layout_height="wrap_content">
 
-        </TextView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/markerOther"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/btn_add_fav"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="26dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean"
+                    android:textColor="@color/black">
+
+                </TextView>
+            </LinearLayout>
+        </ScrollView>
 
 
-        <Button
-            android:id="@+id/btn_route"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="1dp"
-            android:layout_gravity="center"
-            android:background="@color/white"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:text="Get Route"
-            android:textColor="#fff" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_add_fav"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="1dp"
-            android:background="@color/white"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:text="Add To Favorites"
-            android:textColor="#fff" />
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_route"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/btn_blue_rounded"
+                android:fontFamily="@font/poppins_regular"
+                android:text="Get Route"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_add_fav"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|top"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/btn_gray_rounded"
+                android:fontFamily="@font/poppins_regular"
+                android:text="Add To Favorites"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:layout_weight="1" />
+        </LinearLayout>
 
     </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

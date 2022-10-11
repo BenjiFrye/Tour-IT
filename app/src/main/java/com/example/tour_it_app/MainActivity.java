@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mainDrawer;
     private View searchFrag;
     private RelativeLayout reLayout;
-
-    //private Button btnSearch;
     private TextView txtHeading;
     private TextView txtNavName;
     private TextView txtNavEmail;
