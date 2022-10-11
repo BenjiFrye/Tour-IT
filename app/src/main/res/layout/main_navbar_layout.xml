@@ -29,7 +29,8 @@
             app:itemIconTint="@color/black"
             app:itemTextAppearance="@style/MainNavigationViewTextStyle"
             app:itemTextColor="@color/black"
-            app:menu="@menu/main_nav_bar">
+            app:menu="@menu/main_nav_bar"
+            android:layoutDirection="ltr">
 
             <LinearLayout
                 android:layout_width="match_parent"

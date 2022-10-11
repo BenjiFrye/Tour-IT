@@ -15,14 +15,18 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,12 +73,13 @@ public class MainActivity extends AppCompatActivity
     private NavigationView sideNavView;
     private BottomNavigationView bottomView;
     private DrawerLayout mainDrawer;
+    private View searchFrag;
+    private RelativeLayout reLayout;
 
     //private Button btnSearch;
     private TextView txtHeading;
     private TextView txtNavName;
     private TextView txtNavEmail;
-    private TextView txtLandmarkName;
 
     //Searching variables
     public static PlacesClient placesClient;
@@ -106,91 +111,28 @@ public class MainActivity extends AppCompatActivity
         //------------------------------------------------------------------------------------------
 
         //Finding Id's
-        //btnSearch = findViewById(R.id.btnMainSearch);
         bottomView = findViewById(R.id.bottomNavView);
         sideNavView = findViewById(R.id.mainNavView);
-        //txtHeading = findViewById(R.id.txtPageName);
+        txtHeading = findViewById(R.id.txtPageName);
         txtNavName = findViewById(R.id.txtNav_Name);
         txtNavEmail = findViewById(R.id.txtNav_Email);
-        txtLandmarkName = findViewById(R.id.txtLandmarkName);
+        searchFrag = findViewById(R.id.autoComplete_fragment).getRootView();
+        reLayout = findViewById(R.id.reLayout);
+
+        //Changing appearance of search fragment
+        EditText txt = searchFrag.findViewById(com.google.android.libraries.places.R.id.places_autocomplete_search_input);
+        txt.setTextColor(Color.WHITE);
+        txt.setTextSize(22.0f);
 
         //by default, load the home screen
         SetTopBarMain();
         bottomView.setSelectedItemId(R.id.bttm_home);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout,homeFrag).commit();
 
-        //------------------------------------ Suggestion code -------------------------------------
-        if (!Places.isInitialized())
-        {
-            Places.initialize(this, getString(R.string.map_key));
-        }
-        placesClient = Places.createClient(getApplication());
-        AutocompleteSupportFragment autocompleteSupportFragment = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autoComplete_fragment);
-        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
-        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener()
-        {
-            @Override
-            public void onPlaceSelected(@NonNull Place place)
-            {
-                final LatLng latLng = place.getLatLng();
-
-                Log.i("LOG", "OnPlaceSelected: " + latLng.latitude + "\n" + latLng.latitude);
-
-                if (newMarker != null)
-                {
-                    newMarker.remove();
-                }
-
-                String location = place.getName();
-                txtLandmarkName.setText(location);
-                List<Address> addressList = null;
-
-                if (location != null || !location.equals(""))
-                {
-                    Geocoder geocoder = new Geocoder(getApplication());
-                    try
-                    {
-                        addressList = geocoder.getFromLocationName(location, 1);
-                    }
-                    catch (IOException IOexception)
-                    {
-                        Log.e("ERROR: ", "IOexception: " + IOexception.getMessage());
-                    }
-
-                    if (addressList.size() > 0)
-                    {
-                        Address address = addressList.get(0);
-                        LatLng latLng2 = new LatLng(address.getLatitude(), address.getLongitude());
-                        double latitude = Math.round(address.getLatitude());
-                        double longitude = Math.round(address.getLongitude());
-                        newMarker = mMap.addMarker(new MarkerOptions()
-                                .position(latLng2)
-                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.logo1_blacktext))  GET THE ICON FIRST
-                                .title(location)
-                                .snippet("Latitude: " + latitude + " Longitude: " + longitude)
-                                .snippet("Click For more details"));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,13));
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplication(), "More than one location found!",Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else
-                {
-                    Toast.makeText(getApplication(), "Location Not Found!",Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onError(@NonNull Status status)
-            {
-
-            }
-        });//------------------------------------ Suggestion code -------------------------------------
-
-
-
+        //Implementation for autocomplete fragment
+        AutoCompleteMethod(InitialiseAutoComplete());
+        //variable used to run view
+        final View root = searchFrag.getRootView();
 
         //Bottom Navigation Bar menu item On Click
         bottomView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -230,8 +172,8 @@ public class MainActivity extends AppCompatActivity
                     case R.id.main_search:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, homeFrag).commit();
                         bottomView.setSelectedItemId(R.id.bttm_home);
-                        ShowSearchDialogue();
                         closeDrawer(mainDrawer);
+                        RunSearch(root);
                         return true;
                     case R.id.main_fav:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, favouritesFrag).commit();
@@ -261,20 +203,115 @@ public class MainActivity extends AppCompatActivity
     }
     //----------------------------------------------------------------------------------------------
 
+    //----------------------------------- AutoComplete Fragment Code -------------------------------
+    //Method opens the search fragment
+    private void RunSearch(View root) {
+        root.post(new Runnable() {
+            @Override
+            public void run() {
+                root.findViewById(com.google.android.libraries.places.R.id.places_autocomplete_search_input).performClick();
+            }
+        });
+    }
 
+    //Initialise the AutoCompleteSupportFragment
+    private AutocompleteSupportFragment InitialiseAutoComplete() {
+
+        AutocompleteSupportFragment autocompleteSupportFragment =
+                (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autoComplete_fragment);
+
+        return autocompleteSupportFragment;
+    }
+
+    //Implementation
+    public void AutoCompleteMethod(AutocompleteSupportFragment acFrag) {
+
+        if (!Places.isInitialized())
+        {
+            Places.initialize(this, getString(R.string.map_key));
+        }
+
+        placesClient = Places.createClient(getApplication());
+
+        acFrag.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+
+        acFrag.setOnPlaceSelectedListener(new PlaceSelectionListener()
+        {
+            @Override
+            public void onPlaceSelected(@NonNull Place place)
+            {
+                final LatLng latLng = place.getLatLng();
+
+                Log.i("LOG", "OnPlaceSelected: " + latLng.latitude + "\n" + latLng.latitude);
+
+                if (newMarker != null)
+                {
+                    newMarker.remove();
+                }
+
+                String location = place.getName();
+                List<Address> addressList = null;
+
+                if (location != null || !location.equals(""))
+                {
+                    Geocoder geocoder = new Geocoder(getApplication());
+                    try
+                    {
+                        addressList = geocoder.getFromLocationName(location, 1);
+                    }
+                    catch (IOException IOexception)
+                    {
+                        Log.e("ERROR: ", "IOexception: " + IOexception.getMessage());
+                    }
+
+                    if (addressList.size() > 0)
+                    {
+                        Address address = addressList.get(0);
+                        LatLng latLng2 = new LatLng(address.getLatitude(), address.getLongitude());
+                        double latitude = Math.round(address.getLatitude());
+                        double longitude = Math.round(address.getLongitude());
+                        newMarker = mMap.addMarker(new MarkerOptions()
+                                .position(latLng2)
+                                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.logo1_blacktext))  GET THE ICON FIRST
+                                .title(location)
+                                .snippet("Latitude: " + latitude + " Longitude: " + longitude)
+                                .snippet("Click For more details"));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,13));
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplication(), "More than one location found!",Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(getApplication(), "Location could not be found.",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Status status)
+            {
+
+            }
+        });
+    }
+    //----------------------------------------------------------------------------------------------
+
+    //-------------------------------- Top Bar Heading appearance ----------------------------------
     //Change appearance of top bar when home page is open
     private void SetTopBarMain() {
-        //txtHeading.setText("LandmarkName");
-        //txtHeading.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon_pin,0,0,0);
-        //btnSearch.setVisibility(View.VISIBLE);
+        txtHeading.setText("");
+        reLayout.setVisibility(View.VISIBLE);
     }
 
     //Change appearance of top bar if any other page is open
     private void SetTopBarOther(String heading) {
-        //txtHeading.setText(heading);
-        //txtHeading.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        //btnSearch.setVisibility(View.INVISIBLE);
+        txtHeading.setText(heading);
+        reLayout.setVisibility(View.INVISIBLE);
     }
+    //----------------------------------------------------------------------------------------------
+
 
     //----------------------------------- Drawer Management Code -----------------------------------
     public void ClickMenu(View view)
@@ -285,18 +322,18 @@ public class MainActivity extends AppCompatActivity
     public static void openDrawer(DrawerLayout drawerLayout)
     {
         //Open the drawer layout
-        drawerLayout.openDrawer(GravityCompat.START);
+        drawerLayout.openDrawer(Gravity.RIGHT);
     }
 
     public static void closeDrawer(DrawerLayout drawerLayout)
     {
         //Close drawer layout
         //Check condition
-        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+        if (drawerLayout.isDrawerOpen(GravityCompat.END))
         {
             //When drawer is open
             //Close Drawer
-            drawerLayout.closeDrawer(GravityCompat.START);
+            drawerLayout.closeDrawer(GravityCompat.END);
         }
     }
     //----------------------------------------------------------------------------------------------
@@ -346,17 +383,6 @@ public class MainActivity extends AppCompatActivity
     private void SetNavDrawerUserDetails() {
         txtNavName.setText(currentName);
         txtNavEmail.setText(currentEmail);
-    }
-    //----------------------------------------------------------------------------------------------
-
-
-    //------------------------------------ Search Dialogue -----------------------------------------
-    public void ClickSearch(View view) {
-        ShowSearchDialogue();
-    }
-    private void ShowSearchDialogue() {
-        SearchFragment dialog = new SearchFragment();
-        dialog.show(getSupportFragmentManager(), "Search Dialogue");
     }
     //----------------------------------------------------------------------------------------------
 

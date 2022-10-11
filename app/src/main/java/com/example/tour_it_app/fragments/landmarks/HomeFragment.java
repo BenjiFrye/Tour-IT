@@ -95,14 +95,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     //FragmentMapsBinding binding;.
     SupportMapFragment mapFragment;
-    FusedLocationProviderClient client;
+   // FusedLocationProviderClient client;
     public static GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     double currentLat = 0, currentLong = 0;
 
     //Searching functionality
     public static Marker newMarker = null;
-    //Searching functionality
 
     public HomeFragment()
     {
@@ -139,12 +138,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         googleMap.setOnPoiClickListener(this);
         googleMap.setOnMarkerClickListener(this);
         googleMap.setOnInfoWindowClickListener(this);
+
     }
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker)
     {
-
         return false;
     }
 
@@ -170,8 +169,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     currentLong = location.getLongitude();
 
                     //TODO: Debug code to set CURRENT LOCATION to Cape Town, FOR USE IN EMULATOR     - Remove for production
-                    //currentLat = -33.819513;
-                    //currentLong = 18.490832;
+                    currentLat = -33.819513;
+                    currentLong = 18.490832;
                     //TODO: Debug code to set CURRENT LOCATION to Cape Town, FOR USE IN EMULATOR     - Remove for production
 
                     mMap.setMyLocationEnabled(true);
