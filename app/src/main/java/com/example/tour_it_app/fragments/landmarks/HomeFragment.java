@@ -70,10 +70,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     SupportMapFragment mapFragment;
     public static GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    double currentLat = 0, currentLong = 0;
+
+    LatLng currentLatLng;
+    LatLng destinationLatLng;
 
     //Searching functionality
     public static Marker newMarker = null;
+    PolylineOptions polylineOptions = null;
 
     public HomeFragment()
     {
@@ -113,17 +116,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     }
 
-    @Override
-    public boolean onMarkerClick(@NonNull Marker marker)
-    {
-        return false;
-    }
 
-    @Override
-    public void onInfoWindowClick(@NonNull Marker marker)
-    {
-        markerInteraction(marker);
-    }
 
     @SuppressLint("MissingPermission")
     public void getCurrentLocation()
@@ -135,6 +128,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             {
                 if (location != null)
                 {
+                    double currentLat = 0, currentLong = 0;
+
                     Toast.makeText(getContext(), "I WAS RUN", Toast.LENGTH_LONG).show();
                     currentLat = location.getLatitude();
                     currentLong = location.getLongitude();
@@ -146,31 +141,80 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                     mMap.setMyLocationEnabled(true);
 
-                    LatLng currentlatLng = new LatLng(currentLat, currentLong);
+                    currentLatLng = new LatLng(currentLat, currentLong);
                     //MarkerOptions options = new MarkerOptions().position(latLng).title("I am here");
                     //options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentlatLng, 15));
-                    //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,17));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
                 }
             }
         });
     }
 
-    private void direction2()
+    private void getDistanceMatrix()
     {
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        String url = Uri.parse("https://maps.googleapis.com/maps/api/distancematrix/json")
+                .buildUpon().appendQueryParameter("origins", "Cape Town")
+                .appendQueryParameter("destinations", "Stellenbosch")
+                .appendQueryParameter("unit", "imperial")
+                .appendQueryParameter("key", "AIzaSyBHzZJu7d-ZpaB31W1_BOo590Tzi35XvLk").toString();
 
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>()
+        {
+            @Override
+            public void onResponse(JSONObject response)
+            {
+                try
+                {
+                    String status = response.getString("status");
+                    if (status.equals("OK"))
+                    {
+                        JSONArray distance = response.getJSONArray("distance");
+                        Toast.makeText(getContext(), "Distance: " + distance, Toast.LENGTH_LONG).show();
+                    }
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+                , new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+
+            }
+        });
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonObjectRequest.setRetryPolicy(retryPolicy);
+        requestQueue.add(jsonObjectRequest);
     }
-
 
     private void direction() // LatLng currentLocation, LatLng destination SIGNATURE TO BE ADDED
     {
+        if (newMarker != null)
+        {
+            newMarker.remove();
+            mMap.clear();
+        }
         Toast.makeText(getContext(), "Direction 1", Toast.LENGTH_LONG).show();
+
+        String destinationLatLong = destinationLatLng.latitude + ", " + destinationLatLng.longitude;
+        double destinationLat = destinationLatLng.latitude, destinationLong = destinationLatLng.longitude;
+
+        String originLatLong = currentLatLng.latitude + ", " + currentLatLng.longitude;
+        double originLat = currentLatLng.latitude, originLong = currentLatLng.longitude;
+
+        Toast.makeText(getContext(), "Destination: " + destinationLatLong, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Origin: " + originLatLong, Toast.LENGTH_LONG).show();
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         String url = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
                 .buildUpon()
-                .appendQueryParameter("destination", "-33.831830, 18.516352") // + lat + ", " + lng   Where you want to go AKA the maker through the Find Routes button
-                .appendQueryParameter("origin", "-33.819581, 18.490941") //  + currentLat + ", " + currentLng    Current Location
+                .appendQueryParameter("destination", destinationLatLong) // + lat + ", " + lng   Where you want to go AKA the maker through the Find Routes button
+                .appendQueryParameter("origin", originLatLong) //  + currentLat + ", " + currentLng    Current Location
                 .appendQueryParameter("mode", "driving") // Will you be walking, driving or jogging
                 .appendQueryParameter("key", "AIzaSyBHzZJu7d-ZpaB31W1_BOo590Tzi35XvLk").toString();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>()
@@ -185,7 +229,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     {
                         JSONArray routes = response.getJSONArray("routes");
                         ArrayList<LatLng> points;
-                        PolylineOptions polylineOptions = null;
 
                         for (int i = 0; i < routes.length(); i++)
                         {
@@ -215,15 +258,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                             polylineOptions.geodesic(true);
                         }
                         mMap.addPolyline(polylineOptions);
-                        mMap.addMarker( new MarkerOptions().position(new LatLng(-6.9249233, 107.6345122)).title("Your current Location"));
-                        mMap.addMarker( new MarkerOptions().position(new LatLng(-6.9218571, 107.6048254)).title("Your destination"));
 
+
+                        newMarker = mMap.addMarker( new MarkerOptions().position(new LatLng(originLat, originLong))
+                                .title("Your current Location"));
+                        newMarker = mMap.addMarker( new MarkerOptions().position(new LatLng(destinationLat, destinationLong))
+                                .title("Your destination")
+                                .snippet("Distance: 300m      Time: 3 Minutes"));
                         LatLngBounds bounds = new LatLngBounds.Builder()
-                                .include(new LatLng(-6.9249233, 107.6345122))
-                                .include(new LatLng(-6.9218571, 107.6048254)).build();
+                                .include(new LatLng(originLat, originLong))           //ORIGIN
+                                .include(new LatLng(destinationLat, destinationLong)).build();  //DESTINATION
                         Point point = new Point();
                         getActivity().getWindowManager().getDefaultDisplay().getSize(point);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, point.x, 150, 30));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, point.x, 200, 30));
                     }
                 }
                 catch (JSONException e)
@@ -245,6 +292,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         jsonObjectRequest.setRetryPolicy(retryPolicy);
         requestQueue.add(jsonObjectRequest);
     }
+
+
 
 
     private List<LatLng> decodePoly(String encoded)
@@ -332,8 +381,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         {
             Place place = response.getPlace();
 
+            // ------------------------------ DEBUG ---------------------------------
             String locationID, locationName, locationNumber = null, locationLatLong;
-
             locationID = place.getId();
             locationName = place.getName();
             if (place.getPhoneNumber() == null)
@@ -345,12 +394,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 locationNumber = place.getPhoneNumber();
             }
             locationLatLong = "Latitude " + poi.latLng.latitude + ", Longitude " + poi.latLng.longitude;
-
             Log.i("Location Data",
                  "\nPlace ID: " + locationID
                     + "\nPlace Name: " + locationName
                     + "\nPlace Number: " + locationNumber
                     + "\nPlace LatLong: " + locationLatLong);
+            // ------------------------------ DEBUG ---------------------------------
+
+            destinationLatLng = new LatLng(poi.latLng.latitude, poi.latLng.longitude);
+            markerInteraction(poi);
         }
         ).addOnFailureListener((exception) ->
         {
@@ -362,61 +414,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 // TODO: Handle error with given status code.
             }
         });
-        markerInteraction(poi);
-    }
-
-    public void markerInteraction(PointOfInterest poi)
-    {
-
-        //----------------------------- Code to display a dialog box -------------------------------
-        // Used when a user clicks on a POI on google maps, AKA Burger King -> Give me more info
-
-        Dialog dialog = new Dialog(getContext(), R.style.DialogStyle);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setContentView(R.layout.marker_details);
-
-        TextView markerName = dialog.findViewById(R.id.markerName);
-        TextView markerAddress = dialog.findViewById(R.id.markerAddress);
-        TextView markerNumber = dialog.findViewById(R.id.markerNumber);
-        TextView markerOther = dialog.findViewById(R.id.markerOther);
-
-        markerName.setText(poi.name.toString());
-        markerAddress.setText("PLACEHOLDER: 21 Barry Road");
-        markerNumber.setText("PLACEHOLDER: 081 485 3711");
-        markerOther.setText("PLACEHOLDER: It's a ugly house");
-
-        Button btn_Route = dialog.findViewById(R.id.btn_route);
-        Button btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
-
-        btn_Route.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                //TODO: ADD CODE TO NAVIGATE THE USER HERE
-                Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
-
-                double latitude = poi.latLng.latitude;
-                double longitude = poi.latLng.longitude;
-                //drawRoute();
-                direction();
-
-                dialog.dismiss();
-            }
-        });
-        btn_add_fav.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                //TODO: ADD CODE TO ADD THIS LOCATION TO THEIR FAVOURITES
-
-                Toast.makeText(getContext(), "YOU CLICKED: Add to Favourites", Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-        //----------------------------- Code to display a dialog box -------------------------------
     }
 
     public void markerInteraction(Marker poi)
@@ -434,9 +431,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         TextView markerOther = dialog.findViewById(R.id.markerOther);
 
         markerName.setText(poi.getTitle());
-      //  markerAddress.setText("PLACEHOLDER: 21 Barry Road");
-       // markerNumber.setText("PLACEHOLDER: 081 485 3711");
-       // markerOther.setText("PLACEHOLDER: It's a ugly house");
+        markerAddress.setText("PLACEHOLDER: 21 Barry Road");
+        markerNumber.setText("PLACEHOLDER: 081 485 3711");
+        markerOther.setText("PLACEHOLDER: It's a ugly house");
 
         Button btn_Route = dialog.findViewById(R.id.btn_route);
         Button btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
@@ -447,11 +444,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View view)
             {
                 //TODO: ADD CODE TO NAVIGATE THE USER HERE
-
                 Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
+                destinationLatLng = new LatLng(poi.getPosition().latitude, poi.getPosition().longitude);
                 direction();
-
-
                 dialog.dismiss();
             }
         });
@@ -468,6 +463,68 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
         dialog.show();
         //----------------------------- Code to display a dialog box -------------------------------
+    }
+
+    public void markerInteraction(PointOfInterest poi)
+    {
+        //----------------------------- Code to display a dialog box -------------------------------
+        // Used when a user clicks on a POI on google maps, AKA Burger King -> Give me more info
+
+        Dialog dialog = new Dialog(getContext(), R.style.DialogStyle);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setContentView(R.layout.marker_details);
+
+        TextView markerName = dialog.findViewById(R.id.markerName);
+        TextView markerAddress = dialog.findViewById(R.id.markerAddress);
+        TextView markerNumber = dialog.findViewById(R.id.markerNumber);
+        TextView markerOther = dialog.findViewById(R.id.markerOther);
+
+        markerName.setText("Not sure what to display here");
+        markerAddress.setText("Not sure what to display here");
+        markerNumber.setText("Not sure what to display here");
+        markerOther.setText("Not sure what to display here"); //TODO What should we show?
+
+        Button btn_Route = dialog.findViewById(R.id.btn_route);
+        Button btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
+
+        btn_Route.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //TODO: ADD CODE TO NAVIGATE THE USER HERE
+                Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
+
+                Toast.makeText(getContext(), "Destination would be: " + poi.latLng.latitude + " " + poi.latLng.longitude, Toast.LENGTH_LONG).show();
+                direction();
+                dialog.dismiss();
+            }
+        });
+        btn_add_fav.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //TODO: ADD CODE TO ADD THIS LOCATION TO THEIR FAVOURITES
+
+                Toast.makeText(getContext(), "YOU CLICKED: Add to Favourites", Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+        //----------------------------- Code to display a dialog box -------------------------------
+    }
+
+    @Override
+    public boolean onMarkerClick(@NonNull Marker marker)
+    {
+        return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(@NonNull Marker marker)
+    {
+        markerInteraction(marker);
     }
 }
 //References:
