@@ -15,7 +15,7 @@
 
         <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="131dp">
 
             <ImageButton
                 android:id="@+id/btnCloseInfo"
@@ -28,34 +28,37 @@
                 app:srcCompat="@drawable/ic_close" />
 
             <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/txtRouteTitle"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="40dp"
-                android:fontFamily="@font/poppins_regular"
+                android:fontFamily="@font/poppins_semibold"
                 android:text="@string/waterfront"
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/textView15"
-                android:layout_width="wrap_content"
+                android:id="@+id/txtRouteLat"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="65dp"
+                android:layout_marginBottom="20dp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="19 Dock Rd"
-                android:textColor="#4E4E4E" />
+                android:text="-33.819513"
+                android:textColor="#717171" />
 
             <TextView
-                android:id="@+id/textView16"
-                android:layout_width="wrap_content"
+                android:id="@+id/txtRouteLong"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="90dp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="Shopping Mall"
-                android:textColor="#4E4E4E" />
+                android:text="18.490832"
+                android:textColor="#717171" />
 
             <ImageButton
                 android:id="@+id/btnSmallHeart"
@@ -80,7 +83,7 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="7dp">
 
             <TextView
                 android:id="@+id/textView18"
@@ -102,7 +105,7 @@
                 android:textColor="#4E4E4E" />
 
             <TextView
-                android:id="@+id/textView21"
+                android:id="@+id/txtRouteEstTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="180dp"
@@ -112,7 +115,7 @@
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/textView20"
+                android:id="@+id/txtRouteDis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="180dp"

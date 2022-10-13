@@ -37,23 +37,23 @@
                     android:textSize="17sp" />
 
                 <TextView
-                    android:id="@+id/txtLandAddress"
+                    android:id="@+id/txtLandLat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="19 Dock Rd"
-                    android:textColor="@color/custom4"
+                    android:text="-33.819513"
+                    android:textColor="#707070"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/txtLandArea"
+                    android:id="@+id/txtLandLong"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="Cape Town, WC"
-                    android:textColor="@color/custom4"
+                    android:text="18.490832"
+                    android:textColor="#707070"
                     android:textSize="16sp" />
             </LinearLayout>
 

@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
     AccountFragment accFrag = new AccountFragment();
 
     //Type variables
-    private String UserID;
+    public static String UserID = "No ID"; //holds id of currently logged in user
     public static String currentEmail = "someone.example@gmail.com"; //holds email of currently logged in user
     public static String currentName = "Guest User"; //holds email of currently logged in user
 

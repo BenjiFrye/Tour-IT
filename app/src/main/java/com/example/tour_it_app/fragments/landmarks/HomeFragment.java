@@ -3,7 +3,6 @@ package com.example.tour_it_app.fragments.landmarks;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.pm.InstrumentationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Location;
@@ -37,6 +36,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
+import com.example.tour_it_app.object_classes.Favourites;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -55,6 +55,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,6 +89,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private ImageButton btnSmallHeart;
     private ImageButton btnCloseInfo;
     private LinearLayout infoLayout;
+    private TextView routeTitle;
+    private TextView routeAddress;
+    private TextView routeOther;
+
+    //Firebase variables
+    private FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private DatabaseReference dbUsersRef = db.getReference("Users");
+
+    private Favourites fav;
+
 
 
     public HomeFragment()
@@ -101,12 +115,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         btnCloseInfo = getActivity().findViewById(R.id.btnCloseInfo);
         infoLayout = getActivity().findViewById(R.id.info_layout);
         btnOpenInfo = getActivity().findViewById(R.id.btnOpenInfo);
+        routeTitle = getActivity().findViewById(R.id.txtRouteTitle);
+        routeAddress = getActivity().findViewById(R.id.txtRouteLat);
+        routeOther = getActivity().findViewById(R.id.txtRouteLong);
 
 
         //Default operations
         infoLayout.setVisibility(View.INVISIBLE);
-       // btnOpenInfo.setVisibility(View.INVISIBLE);
+        btnOpenInfo.setVisibility(View.INVISIBLE);
         btnSmallHeart.setTag("1");
+        fav = new Favourites();
 
         //Checks if user has given need permissions
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
@@ -164,7 +182,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap)
     {
-        Toast.makeText(getContext(), "I WAS CALLED", Toast.LENGTH_LONG).show();
         getCurrentLocation();
 
         mMap = googleMap;
@@ -199,13 +216,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 {
                     double currentLat = 0, currentLong = 0;
 
-                    Toast.makeText(getContext(), "I WAS RUN", Toast.LENGTH_LONG).show();
+                   // Toast.makeText(getContext(), "I WAS RUN", Toast.LENGTH_LONG).show();
                     currentLat = location.getLatitude();
                     currentLong = location.getLongitude();
 
                     //TODO: Debug code to set CURRENT LOCATION to Cape Town, FOR USE IN EMULATOR     - Remove for production
-                    //currentLat = -33.819513;
-                    //currentLong = 18.490832;
+                  //  currentLat = -33.819513;
+                  //  currentLong = 18.490832;
                     //TODO: Debug code to set CURRENT LOCATION to Cape Town, FOR USE IN EMULATOR     - Remove for production
 
                     mMap.setMyLocationEnabled(true);
@@ -232,7 +249,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             newMarker.remove();
             mMap.clear();
         }
-        Toast.makeText(getContext(), "Direction 1", Toast.LENGTH_LONG).show();
+       // Toast.makeText(getContext(), "Direction 1", Toast.LENGTH_LONG).show();
 
         String destinationLatLong = destinationLatLng.latitude + ", " + destinationLatLng.longitude;
         double destinationLat = destinationLatLng.latitude, destinationLong = destinationLatLng.longitude;
@@ -240,8 +257,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         String originLatLong = currentLatLng.latitude + ", " + currentLatLng.longitude;
         double originLat = currentLatLng.latitude, originLong = currentLatLng.longitude;
 
-        Toast.makeText(getContext(), "Destination: " + destinationLatLong, Toast.LENGTH_LONG).show();
-        Toast.makeText(getContext(), "Origin: " + originLatLong, Toast.LENGTH_LONG).show();
+       // Toast.makeText(getContext(), "Destination: " + destinationLatLong, Toast.LENGTH_LONG).show();
+       // Toast.makeText(getContext(), "Origin: " + originLatLong, Toast.LENGTH_LONG).show();
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         String url = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
@@ -286,8 +303,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                 }
                             }
                             polylineOptions.addAll(points);
-                            polylineOptions.width(10); // To change the thinkness of the line
-                            polylineOptions.color(ContextCompat.getColor(getContext(), R.color.custom2));
+                            polylineOptions.width(15); // To change the thinkness of the line
+                            polylineOptions.color(ContextCompat.getColor(getContext(), R.color.custom1));
                             polylineOptions.geodesic(true);
                         }
                         mMap.addPolyline(polylineOptions);
@@ -320,7 +337,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
             }
         });
-        Toast.makeText(getContext(), "Direction 4", Toast.LENGTH_LONG).show();
+
+        //Toast.makeText(getContext(), "Direction 4", Toast.LENGTH_LONG).show();
         RetryPolicy retryPolicy = new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         jsonObjectRequest.setRetryPolicy(retryPolicy);
         requestQueue.add(jsonObjectRequest);
@@ -397,7 +415,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onPoiClick(@NonNull PointOfInterest poi)
     {
-        Toast.makeText(getContext(), "YOU CLICKED ON A POI", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getContext(), "YOU CLICKED ON A POI", Toast.LENGTH_LONG).show();
 
         final String placeId = poi.placeId;
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.PHONE_NUMBER);
@@ -469,10 +487,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View view)
             {
                 //TODO: ADD CODE TO NAVIGATE THE USER HERE
-                Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Destination would be: " + poi.latLng.latitude + " " + poi.latLng.longitude, Toast.LENGTH_LONG).show();
 
-                Toast.makeText(getContext(), "Destination would be: " + poi.latLng.latitude + " " + poi.latLng.longitude, Toast.LENGTH_LONG).show();
                 direction();
+                LoadRouteInfo(poi.name, poi.latLng.latitude, poi.latLng.longitude);
+                btnOpenInfo.setVisibility(View.VISIBLE);
                 dialog.dismiss();
             }
         });
@@ -481,9 +501,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
-                //TODO: ADD CODE TO ADD THIS LOCATION TO THEIR FAVOURITES
-
-                Toast.makeText(getContext(), "YOU CLICKED: Add to Favourites", Toast.LENGTH_LONG).show();
+                AddLocationToDB(poi.name, poi.latLng.latitude, poi.latLng.longitude, poi.placeId);
                 dialog.dismiss();
             }
         });
@@ -513,9 +531,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View view)
             {
                 //TODO: ADD CODE TO NAVIGATE THE USER HERE
-                Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
-                destinationLatLng = new LatLng(poi.getPosition().latitude, poi.getPosition().longitude);
+               // Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
+               // destinationLatLng = new LatLng(poi.getPosition().latitude, poi.getPosition().longitude);
                 direction();
+                LoadRouteInfo(poi.getTitle(), poi.getPosition().latitude, poi.getPosition().longitude);
+                btnOpenInfo.setVisibility(View.VISIBLE);
                 dialog.dismiss();
             }
         });
@@ -524,15 +544,47 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
-                //TODO: ADD CODE TO ADD THIS LOCATION TO THEIR FAVOURITES
-
-                Toast.makeText(getContext(), "YOU CLICKED: Add to Favourites", Toast.LENGTH_LONG).show();
+                AddLocationToDB(poi.getTitle(), poi.getPosition().latitude, poi.getPosition().longitude, poi.getId());
                 dialog.dismiss();
             }
         });
         dialog.show();
         //----------------------------- Code to display a dialog box -------------------------------
     }
+
+    //------------------------------- Method to populate route info card ---------------------------
+    private void LoadRouteInfo(String title, double latitude, double longitude) {
+         routeTitle.setText(title);
+         routeAddress.setText(String.valueOf(latitude));
+         routeOther.setText(String.valueOf(longitude));
+    }
+    //----------------------------------------------------------------------------------------------
+
+
+    //------------------------------ Method to add location to favourites db -----------------------
+    private void AddLocationToDB(String title, double lat, double lon, String id) {
+
+        MainActivity mainAct = new MainActivity();
+
+        //Retrieving current user's ID
+        String userID = mainAct.UserID;
+
+        DatabaseReference ref = dbUsersRef.child(userID).child("Favourites");
+
+        fav.setTitle(title);
+        fav.setLatitude(lat);
+        fav.setLongitude(lon);
+        fav.setLocationID(id);
+
+        //TODO: CHECK IF THIS LOCATION DOESN'T ALREADY EXIST IN THE DATABASE BEFORE ADDING
+        ref.push().setValue(fav);
+
+        Toast.makeText(getContext(), title + " has successfully been added to your favourites.", Toast.LENGTH_LONG).show();
+
+    }
+    //----------------------------------------------------------------------------------------------
+
+
 }
 //References:
 //Helped with getting Google Directions API to work - https://www.youtube.com/watch?v=CSbmlp61zLg&t=169s&ab_channel=CodeWorked

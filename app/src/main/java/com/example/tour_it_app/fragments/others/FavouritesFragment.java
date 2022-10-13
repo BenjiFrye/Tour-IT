@@ -2,6 +2,7 @@ package com.example.tour_it_app.fragments.others;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -11,9 +12,20 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
-import com.google.android.material.badge.BadgeUtils;
+import com.example.tour_it_app.object_classes.Favourites;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class FavouritesFragment extends Fragment {
 
@@ -21,9 +33,12 @@ public class FavouritesFragment extends Fragment {
     private GridLayout layout;
     private View cardView;
     private TextView txtName;
-    private TextView txtArea;
-    private TextView txtAddress;
+    private TextView txtLat;
+    private TextView txtLong;
     private ImageButton btnImageHeart;
+
+    //Type variables
+    private String userID;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -44,6 +59,9 @@ public class FavouritesFragment extends Fragment {
         cardView = getLayoutInflater().inflate(R.layout.card_view_favourites, null);
         btnImageHeart = cardView.findViewById(R.id.btnHeart);
 
+        //Default operations
+        RetrieveFavouritesData();
+
         //Listeners
         btnImageHeart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,8 +72,6 @@ public class FavouritesFragment extends Fragment {
             }
         });
 
-        //Call method to add card view
-        AddCard("Robben Island", "Cape Town, WC", "Table Bay");
 
     }
 
@@ -78,21 +94,65 @@ public class FavouritesFragment extends Fragment {
     //-------------------------- This method retrieves favourites data from db ---------------------
     private void RetrieveFavouritesData() {
 
+        MainActivity mainAct = new MainActivity();
+        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference();
+
+        //Retrieving current user's ID
+        String userID = mainAct.UserID;
+        //Query retrieves data from the correct reference
+        Query query = dataRef.child("Users").child(userID).child("Favourites");
+
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.exists()) {
+
+                    for (DataSnapshot item : snapshot.getChildren()) {
+
+                        String title = item.child("title").getValue().toString();
+                        String latitude = item.child("latitude").getValue().toString();
+                        String longitude = item.child("longitude").getValue().toString();
+
+                        //Display the card with the retrieved favourite
+                        AddCard(title, latitude, longitude);
+
+                        Toast.makeText(getContext(), title, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Snapshot does not exist",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
     }
     //----------------------------------------------------------------------------------------------
 
     //-------------------------- This method will display populated card views ---------------------
-    private void AddCard(String name, String area, String address) {
+    private void AddCard(String name, String lat, String lon) {
 
         txtName = cardView.findViewById(R.id.txtLandName);
-        txtArea = cardView.findViewById(R.id.txtLandArea);
-        txtAddress = cardView.findViewById(R.id.txtLandAddress);
+        txtLat = cardView.findViewById(R.id.txtLandLong);
+        txtLong = cardView.findViewById(R.id.txtLandLat);
 
         txtName.setText(name);
-        txtArea.setText(area);
-        txtAddress.setText(address);
+        txtLat.setText(lat);
+        txtLong.setText(lon);
 
         btnImageHeart.setTag("1");
+
+        if (cardView.getParent() != null)  {
+            ((ViewGroup)cardView.getParent()).removeView(cardView);
+        }
 
         layout.addView(cardView);
     }
