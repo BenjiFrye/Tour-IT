@@ -14,12 +14,21 @@
         android:name="com.google.android.gms.maps.SupportMapFragment">
     </fragment>
 
-    <ImageButton
-        android:id="@+id/imageButton"
+    <include
+        android:id="@+id/layout_info"
+        layout="@layout/layout_route_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp" />
+
+    <ImageButton
+        android:id="@+id/btnOpenInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
         android:background="@android:color/transparent"
         android:src="@drawable/icon_home_pin" />
+
 </FrameLayout>

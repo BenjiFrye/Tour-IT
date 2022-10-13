@@ -30,60 +30,6 @@
             </TextView>
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/markerAddress"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="@font/poppins_regular"
-            android:text="51 Erica Road"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:id="@+id/markerNumber"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="@font/poppins_regular"
-            android:text="+27 81 485 3711"
-            android:textColor="@color/black">
-
-        </TextView>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/markerOther"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/btn_add_fav"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="26dp"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean"
-                    android:textColor="@color/black">
-
-                </TextView>
-            </LinearLayout>
-        </ScrollView>
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
@@ -132,6 +78,7 @@
                 android:layout_height="10dp"
                 android:layout_weight="1" />
         </LinearLayout>
+
 
     </LinearLayout>
 

@@ -3,6 +3,7 @@ package com.example.tour_it_app.fragments.landmarks;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.pm.InstrumentationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Location;
@@ -21,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,6 +81,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public static Marker newMarker = null;
     PolylineOptions polylineOptions = null;
 
+    private ImageButton btnOpenInfo;
+    private ImageButton btnSmallHeart;
+    private ImageButton btnCloseInfo;
+    private LinearLayout infoLayout;
+
 
     public HomeFragment()
     {
@@ -87,6 +95,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
+
+        //Finding ID's
+        btnSmallHeart = getActivity().findViewById(R.id.btnSmallHeart);
+        btnCloseInfo = getActivity().findViewById(R.id.btnCloseInfo);
+        infoLayout = getActivity().findViewById(R.id.info_layout);
+        btnOpenInfo = getActivity().findViewById(R.id.btnOpenInfo);
+
+
+        //Default operations
+        infoLayout.setVisibility(View.INVISIBLE);
+       // btnOpenInfo.setVisibility(View.INVISIBLE);
+        btnSmallHeart.setTag("1");
+
         //Checks if user has given need permissions
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
         {
@@ -101,7 +122,44 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         initializeMap();
 
         mapFragment.getMapAsync(this);
+
+
+        //Listeners
+        btnOpenInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                infoLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnSmallHeart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChangeHeart();
+            }
+        });
+
+        btnCloseInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                infoLayout.setVisibility(View.INVISIBLE);
+            }
+        });
     }
+
+    //--------------------------- Method changes appearance of heart -------------------------------
+    private void ChangeHeart() {
+
+        //Change appearance of image button based on what the image already is
+        if (btnSmallHeart.getTag() == "1"){
+            btnSmallHeart.setImageResource(R.drawable.ic_small_heart_unfilled);
+            btnSmallHeart.setTag("2");
+        } else {
+            btnSmallHeart.setImageResource(R.drawable.ic_small_heart_filled);
+            btnSmallHeart.setTag("1");
+        }
+    }
+    //----------------------------------------------------------------------------------------------
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap)
@@ -399,14 +457,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         dialog.setContentView(R.layout.marker_details);
 
         TextView markerName = dialog.findViewById(R.id.markerName);
-        TextView markerAddress = dialog.findViewById(R.id.markerAddress);
-        TextView markerNumber = dialog.findViewById(R.id.markerNumber);
-        TextView markerOther = dialog.findViewById(R.id.markerOther);
 
-        markerName.setText("Not sure what to display here");
-        markerAddress.setText("Not sure what to display here");
-        markerNumber.setText("Not sure what to display here");
-        markerOther.setText("Not sure what to display here"); //TODO What should we show?
+        markerName.setText(poi.name);
 
         Button btn_Route = dialog.findViewById(R.id.btn_route);
         Button btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
@@ -449,14 +501,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         dialog.setContentView(R.layout.marker_details);
 
         TextView markerName = dialog.findViewById(R.id.markerName);
-        TextView markerAddress = dialog.findViewById(R.id.markerAddress);
-        TextView markerNumber = dialog.findViewById(R.id.markerNumber);
-        TextView markerOther = dialog.findViewById(R.id.markerOther);
 
         markerName.setText(poi.getTitle());
-        markerAddress.setText("PLACEHOLDER: 21 Barry Road");
-        markerNumber.setText("PLACEHOLDER: 081 485 3711");
-        markerOther.setText("PLACEHOLDER: It's a ugly house");
 
         Button btn_Route = dialog.findViewById(R.id.btn_route);
         Button btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
