@@ -2,11 +2,8 @@ package com.example.tour_it_app.fragments.landmarks;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Point;
 import android.location.Location;
 import android.net.Uri;
@@ -18,22 +15,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.view.MenuItemCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +34,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
-import com.example.tour_it_app.startup.Login;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -61,23 +47,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,7 +60,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnPoiClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener
 {
@@ -166,8 +140,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     currentLong = location.getLongitude();
 
                     //TODO: Debug code to set CURRENT LOCATION to Cape Town, FOR USE IN EMULATOR     - Remove for production
-                    currentLat = -33.819513;
-                    currentLong = 18.490832;
+                    //currentLat = -33.819513;
+                    //currentLong = 18.490832;
                     //TODO: Debug code to set CURRENT LOCATION to Cape Town, FOR USE IN EMULATOR     - Remove for production
 
                     mMap.setMyLocationEnabled(true);
@@ -187,16 +161,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     }
 
+
     private void direction() // LatLng currentLocation, LatLng destination SIGNATURE TO BE ADDED
     {
         Toast.makeText(getContext(), "Direction 1", Toast.LENGTH_LONG).show();
+
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         String url = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
                 .buildUpon()
-                .appendQueryParameter("destination", "-6.913823, 107.608983") // + lat + ", " + lng   Where you want to go AKA the maker through the Find Routes button
-                .appendQueryParameter("origin", "-6.916072, 107.641126") //  + currentLat + ", " + currentLng    Current Location
+                .appendQueryParameter("destination", "-33.831830, 18.516352") // + lat + ", " + lng   Where you want to go AKA the maker through the Find Routes button
+                .appendQueryParameter("origin", "-33.819581, 18.490941") //  + currentLat + ", " + currentLng    Current Location
                 .appendQueryParameter("mode", "driving") // Will you be walking, driving or jogging
-                .appendQueryParameter("key", "AIzaSyApmwTYKuY286rVrGi4qQ-d9DOT_TuxWNs").toString();
+                .appendQueryParameter("key", "AIzaSyBHzZJu7d-ZpaB31W1_BOo590Tzi35XvLk").toString();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>()
         {
             @Override
@@ -208,7 +184,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     if (status.equals("OK"))
                     {
                         JSONArray routes = response.getJSONArray("routes");
-
                         ArrayList<LatLng> points;
                         PolylineOptions polylineOptions = null;
 
@@ -274,12 +249,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     private List<LatLng> decodePoly(String encoded)
     {
-        List<LatLng> poly = new ArrayList<>();
+
+        List<LatLng> poly = new ArrayList<LatLng>();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
 
-        while(index < len)
-        {
+        while (index < len) {
             int b, shift = 0, result = 0;
             do {
                 b = encoded.charAt(index++) - 63;
@@ -294,12 +269,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             do {
                 b = encoded.charAt(index++) - 63;
                 result |= (b & 0x1f) << shift;
-                shift +=5;
-            }while (b > 0x20);
+                shift += 5;
+            } while (b >= 0x20);
             int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lng += dlng;
 
-            LatLng p = new LatLng((((double) lat/ 1E5)),
+            LatLng p = new LatLng((((double) lat / 1E5)),
                     (((double) lng / 1E5)));
             poly.add(p);
         }
@@ -350,7 +325,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         if (!Places.isInitialized())
         {
-            Places.initialize(getContext(), getString(R.string.map_key));
+            Places.initialize(requireContext(), "AIzaSyApmwTYKuY286rVrGi4qQ-d9DOT_TuxWNs");
         }
 
         MainActivity.placesClient.fetchPlace(request).addOnSuccessListener((response) ->
@@ -423,8 +398,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                 double latitude = poi.latLng.latitude;
                 double longitude = poi.latLng.longitude;
-
+                //drawRoute();
                 direction();
+
                 dialog.dismiss();
             }
         });
@@ -473,6 +449,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 //TODO: ADD CODE TO NAVIGATE THE USER HERE
 
                 Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
+                direction();
+
 
                 dialog.dismiss();
             }

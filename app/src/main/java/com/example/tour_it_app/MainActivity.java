@@ -272,8 +272,7 @@ public class MainActivity extends AppCompatActivity
                                 .position(latLng2)
                                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.logo1_blacktext))  GET THE ICON FIRST
                                 .title(location)
-                                .snippet("Latitude: " + latitude + " Longitude: " + longitude)
-                                .snippet("Click For more details"));
+                                .snippet("Latitude: " + latitude + " Longitude: " + longitude + "\nClick For more details"));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,13));
                     }
                     else
