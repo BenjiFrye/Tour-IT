@@ -40,7 +40,6 @@
         android:inputType="textPersonName"
         android:minHeight="48dp"
         android:paddingBottom="4dp"
-        android:text="lstuebchen@gmail.com"
         android:textColor="@color/white"
         android:textColorHint="@color/custom9"
         android:textSize="17sp" />
@@ -58,7 +57,6 @@
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:paddingBottom="4dp"
-        android:text="123456"
         android:textColor="@color/white"
         android:textColorHint="@color/custom9"
         android:textSize="17sp" />
@@ -76,34 +74,49 @@
         android:textSize="13sp"
         tools:ignore="TouchTargetSizeCheck" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_login"
-        android:layout_width="230dp"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/btn_white_rounded"
-        android:backgroundTint="@color/custom10"
-        android:fontFamily="@font/poppins_regular"
-        android:paddingTop="7dp"
-        android:text="Login"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="17sp" />
+        android:layout_marginTop="10dp">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_register"
-        android:layout_width="230dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/btn_white_rounded"
-        android:backgroundTint="@color/white"
-        android:fontFamily="@font/poppins_regular"
-        android:paddingTop="7dp"
-        android:text="Register"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="17sp" />
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:indeterminate="true"
+            app:indicatorColor="@color/custom2" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_login"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/btn_white_rounded"
+            android:backgroundTint="@color/custom10"
+            android:fontFamily="@font/poppins_regular"
+            android:paddingTop="7dp"
+            android:text="Login"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_register"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="90dp"
+            android:background="@drawable/btn_white_rounded"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/poppins_regular"
+            android:paddingTop="7dp"
+            android:text="Register"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+    </FrameLayout>
 
 </LinearLayout>

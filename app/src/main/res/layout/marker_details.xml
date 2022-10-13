@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/marker_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -7,15 +9,15 @@
 
     <LinearLayout
         android:layout_width="370dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:background="@color/white"
+        android:background="@color/custom17"
         android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:background="@color/custom16">
+            android:layout_height="69dp"
+            android:background="@color/custom4">
 
             <TextView
                 android:id="@+id/markerName"
@@ -25,59 +27,100 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:gravity="center"
                 android:text="LandMarkTitle"
-                android:textSize="22sp">
+                android:textColor="@color/white"
+                android:textSize="18sp">
 
             </TextView>
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Space
                 android:layout_width="wrap_content"
-                android:layout_height="10dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <ImageButton
                 android:id="@+id/btn_route"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|top"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/btn_blue_rounded"
-                android:fontFamily="@font/poppins_regular"
-                android:text="Get Route"
-                android:textAllCaps="false"
-                android:textColor="#fff"
-                android:textSize="16sp" />
+                android:layout_width="30dp"
+                android:layout_height="62dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/icon_map" />
 
             <Space
                 android:layout_width="wrap_content"
-                android:layout_height="10dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <ImageButton
                 android:id="@+id/btn_add_fav"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|top"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/btn_gray_rounded"
-                android:fontFamily="@font/poppins_regular"
-                android:text="Add To Favorites"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:layout_width="30dp"
+                android:layout_height="62dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/icon_bookmark" />
 
             <Space
                 android:layout_width="wrap_content"
-                android:layout_height="10dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="54dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center"
+                android:text="Get Directions"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_regular"
+                android:gravity="center"
+                android:text="Add to Favourites"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
 
     </LinearLayout>

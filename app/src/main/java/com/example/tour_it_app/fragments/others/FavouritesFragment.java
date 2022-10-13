@@ -37,9 +37,6 @@ public class FavouritesFragment extends Fragment {
     private TextView txtLong;
     private ImageButton btnImageHeart;
 
-    //Type variables
-    private String userID;
-
     public FavouritesFragment() {
         // Required empty public constructor
     }
@@ -80,14 +77,13 @@ public class FavouritesFragment extends Fragment {
 
         //Change appearance of image button based on what the image already is
         if (btnImageHeart.getTag() == "1"){
+            RemoveFavourite();
             btnImageHeart.setImageResource(R.drawable.ic_heart_unfilled);
             btnImageHeart.setTag("2");
         } else {
             btnImageHeart.setImageResource(R.drawable.ic_heart_filled);
             btnImageHeart.setTag("1");
         }
-
-        //TODO: Remove card view implementation
     }
     //----------------------------------------------------------------------------------------------
 
@@ -117,11 +113,9 @@ public class FavouritesFragment extends Fragment {
 
                         //Display the card with the retrieved favourite
                         AddCard(title, latitude, longitude);
-
-                        Toast.makeText(getContext(), title, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Snapshot does not exist",Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
             }
@@ -157,4 +151,8 @@ public class FavouritesFragment extends Fragment {
         layout.addView(cardView);
     }
     //----------------------------------------------------------------------------------------------
+
+    private void RemoveFavourite() {
+        //TODO: REMOVE FAVOURITE IMPLEMENTATION
+    }
 }

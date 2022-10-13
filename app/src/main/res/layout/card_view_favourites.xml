@@ -8,7 +8,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="150dp"
         android:background="@android:color/transparent"
         android:elevation="20dp"
         app:cardBackgroundColor="@color/custom17"
@@ -22,7 +22,8 @@
 
             <LinearLayout
                 android:layout_width="289dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:orientation="vertical">
 
                 <TextView
@@ -30,7 +31,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
-                    android:layout_marginTop="20dp"
                     android:fontFamily="@font/poppins_semibold"
                     android:text="@string/waterfront"
                     android:textColor="@color/black"

@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,9 +36,10 @@ public class Login extends AppCompatActivity
     private TextView txtForgotPassword;
     private EditText txtEmail;
     private EditText txtPassword;
+    private CircularProgressIndicator indicator;
 
     //Firebase variables
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,9 +53,14 @@ public class Login extends AppCompatActivity
         txtForgotPassword = findViewById(R.id.btn_forgot_password);
         txtEmail = findViewById(R.id.edtLoginEmail);
         txtPassword = findViewById(R.id.edtLoginPass);
+        indicator = findViewById(R.id.indicator);
 
         //New instance
         mAuth = FirebaseAuth.getInstance();
+
+        //Default operations
+        btnLogin.setVisibility(View.VISIBLE);
+        indicator.setVisibility(View.INVISIBLE);
 
         //TODO: TEMPORARY LOGIN
         txtEmail.setText("amber.bruil@gmail.com");
@@ -77,8 +84,12 @@ public class Login extends AppCompatActivity
             {
                 //Check that user has entered their email and password
                 if (!txtEmail.getText().toString().isEmpty() && !txtPassword.getText().toString().isEmpty()) {
+                    btnLogin.setVisibility(View.INVISIBLE);
+                    indicator.setVisibility(View.VISIBLE);
                 LoginUser();
                 } else {
+                    btnLogin.setVisibility(View.VISIBLE);
+                    indicator.setVisibility(View.INVISIBLE);
                     Toast.makeText(Login.this, "Please enter both your email and password.",Toast.LENGTH_SHORT).show();
                 }
             }
@@ -115,6 +126,8 @@ public class Login extends AppCompatActivity
                     if (!currentUser.isEmailVerified())
                     {
                         //If email has not been verified
+                        btnLogin.setVisibility(View.VISIBLE);
+                        indicator.setVisibility(View.INVISIBLE);
                         Toast.makeText(Login.this, "Unable to login. Please verify your email", Toast.LENGTH_SHORT).show();
                     }
                     else
@@ -127,6 +140,8 @@ public class Login extends AppCompatActivity
                 else
                 {
                     //If email and password combination fails to authenticate
+                    btnLogin.setVisibility(View.VISIBLE);
+                    indicator.setVisibility(View.INVISIBLE);
                     Toast.makeText(Login.this, "Unable to authenticate email and password combination. " +
                             "Please make sure this account exists.", Toast.LENGTH_LONG).show();
                 }

@@ -55,10 +55,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,7 +111,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
-
         //Finding ID's
         btnSmallHeart = getActivity().findViewById(R.id.btnSmallHeart);
         btnCloseInfo = getActivity().findViewById(R.id.btnCloseInfo);
@@ -118,7 +119,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         routeTitle = getActivity().findViewById(R.id.txtRouteTitle);
         routeAddress = getActivity().findViewById(R.id.txtRouteLat);
         routeOther = getActivity().findViewById(R.id.txtRouteLong);
-
 
         //Default operations
         infoLayout.setVisibility(View.INVISIBLE);
@@ -478,21 +478,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         markerName.setText(poi.name);
 
-        Button btn_Route = dialog.findViewById(R.id.btn_route);
-        Button btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
+        ImageButton btn_Route = dialog.findViewById(R.id.btn_route);
+        ImageButton btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
 
         btn_Route.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                //TODO: ADD CODE TO NAVIGATE THE USER HERE
-                //Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
-                //Toast.makeText(getContext(), "Destination would be: " + poi.latLng.latitude + " " + poi.latLng.longitude, Toast.LENGTH_LONG).show();
-
                 direction();
                 LoadRouteInfo(poi.name, poi.latLng.latitude, poi.latLng.longitude);
                 btnOpenInfo.setVisibility(View.VISIBLE);
+                infoLayout.setVisibility(View.VISIBLE);
                 dialog.dismiss();
             }
         });
@@ -501,7 +498,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
-                AddLocationToDB(poi.name, poi.latLng.latitude, poi.latLng.longitude, poi.placeId);
+                CheckDuplication(poi.name, poi.latLng.latitude, poi.latLng.longitude, poi.placeId);
                 dialog.dismiss();
             }
         });
@@ -523,19 +520,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         markerName.setText(poi.getTitle());
 
         Button btn_Route = dialog.findViewById(R.id.btn_route);
-        Button btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
+        Button btn_add_fav = dialog.findViewById(R.id.marker_layout);
 
         btn_Route.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                //TODO: ADD CODE TO NAVIGATE THE USER HERE
-               // Toast.makeText(getContext(), "YOU CLICKED: Find Route", Toast.LENGTH_LONG).show();
-               // destinationLatLng = new LatLng(poi.getPosition().latitude, poi.getPosition().longitude);
                 direction();
                 LoadRouteInfo(poi.getTitle(), poi.getPosition().latitude, poi.getPosition().longitude);
                 btnOpenInfo.setVisibility(View.VISIBLE);
+                infoLayout.setVisibility(View.VISIBLE);
                 dialog.dismiss();
             }
         });
@@ -544,7 +539,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
-                AddLocationToDB(poi.getTitle(), poi.getPosition().latitude, poi.getPosition().longitude, poi.getId());
+                CheckDuplication(poi.getTitle(), poi.getPosition().latitude, poi.getPosition().longitude, poi.getId());
                 dialog.dismiss();
             }
         });
@@ -576,11 +571,40 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         fav.setLongitude(lon);
         fav.setLocationID(id);
 
-        //TODO: CHECK IF THIS LOCATION DOESN'T ALREADY EXIST IN THE DATABASE BEFORE ADDING
         ref.push().setValue(fav);
 
         Toast.makeText(getContext(), title + " has successfully been added to your favourites.", Toast.LENGTH_LONG).show();
 
+    }
+    //----------------------------------------------------------------------------------------------
+
+
+    //-------------------------- Check if POI already exists in the db -----------------------------
+    private void CheckDuplication(String title, double lat, double lon, String id) {
+
+        MainActivity mainAct = new MainActivity();
+
+        //Retrieving current user's ID
+        String userID = mainAct.UserID;
+
+        Query query = dbUsersRef.child(userID).child("Favourites").orderByChild("locationID").equalTo(id);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.exists()) {
+                    Toast.makeText(getContext(), "This location has already been added to your favourites.",Toast.LENGTH_LONG).show();
+                }
+                else {  AddLocationToDB(title, lat, lon, id);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
     //----------------------------------------------------------------------------------------------
 
