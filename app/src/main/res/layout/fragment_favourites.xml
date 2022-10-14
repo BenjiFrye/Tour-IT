@@ -20,7 +20,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:ignore="SpeakableTextPresentCheck">
+            tools:ignore="SpeakableTextPresentCheck"
+            android:paddingBottom="70dp">
 
             <android.widget.GridLayout
                 android:id="@+id/container"
@@ -31,9 +32,7 @@
                 android:columnCount="1"
                 android:columnOrderPreserved="false"
                 android:rowCount="4">
-
             </android.widget.GridLayout>
         </ScrollView>
-
     </LinearLayout>
 </LinearLayout>
