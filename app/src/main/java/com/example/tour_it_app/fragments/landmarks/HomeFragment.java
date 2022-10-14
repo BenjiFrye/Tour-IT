@@ -109,11 +109,28 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     private Favourites fav;
 
-    private String distanceToLocation = "Not Set", durationToLocation = "Not Set";
+    private String distanceToLocation = "Not Set";
+
+    public String getDistanceToLocation() {
+        return distanceToLocation;
+    }
+    public void setDistanceToLocation(String distanceToLocation) {
+        this.distanceToLocation = distanceToLocation;
+    }
+
+    public String getDurationToLocation() {
+        return durationToLocation;
+    }
+    public void setDurationToLocation(String durationToLocation) {
+        this.durationToLocation = durationToLocation;
+    }
+
+    private String durationToLocation = "Not Set";
 
     public HomeFragment()
     {
         // Required empty public constructor
+
     }
 
     public void getUserPreferance()
@@ -127,15 +144,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         //check if current user is logged in
         if (fUser != null)
         {
-            query.addListenerForSingleValueEvent(new ValueEventListener()
-            {
+            query.addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot)
-                {
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists())
                     {
-                        Toast.makeText(getContext(),"Value of:"+snapshot.getValue().toString().trim(),Toast.LENGTH_SHORT).show();
-
                         if (snapshot.getValue().toString().trim().equals("Metric") )
                         {
                             systemPreferance = "metric";
@@ -148,12 +161,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error)
-                {
+                public void onCancelled(@NonNull DatabaseError error) {
                     Log.e("error", error.getMessage());
                 }
             });
-
         } else
         {
             Toast.makeText(getContext(),"No preferance",Toast.LENGTH_SHORT).show();
@@ -243,6 +254,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void onMapReady(@NonNull GoogleMap googleMap)
     {
         getCurrentLocation();
+        getUserPreferance();
 
         mMap = googleMap;
 
@@ -276,7 +288,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 {
                     double currentLat = 0, currentLong = 0;
 
-                   // Toast.makeText(getContext(), "I WAS RUN", Toast.LENGTH_LONG).show();
                     currentLat = location.getLatitude();
                     currentLong = location.getLongitude();
 
@@ -305,18 +316,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             newMarker.remove();
             mMap.clear();
         }
-       // Toast.makeText(getContext(), "Direction 1", Toast.LENGTH_LONG).show();
 
         String destinationLatLong = destinationLatLng.latitude + ", " + destinationLatLng.longitude;
         double destinationLat = destinationLatLng.latitude, destinationLong = destinationLatLng.longitude;
 
         String originLatLong = currentLatLng.latitude + ", " + currentLatLng.longitude;
         double originLat = currentLatLng.latitude, originLong = currentLatLng.longitude;
-
-       // Toast.makeText(getContext(), "Destination: " + destinationLatLong, Toast.LENGTH_LONG).show();
-       // Toast.makeText(getContext(), "Origin: " + originLatLong, Toast.LENGTH_LONG).show();
-
-        String distance = "Nothing", time = "Nothing";
 
         Toast.makeText(getContext(),"3: " + systemPreferance,Toast.LENGTH_SHORT).show();
 
@@ -348,8 +353,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                             polylineOptions = new PolylineOptions();
                             JSONArray legs = routes.getJSONObject(i).getJSONArray("legs");
 
+                            JSONObject legsObjects = legs.getJSONObject(0);
 
-                            Toast.makeText(getContext(), legs.toString(), Toast.LENGTH_LONG).show();
+                            JSONObject distance = legsObjects.getJSONObject("distance");
+                            setDistanceToLocation(distance.getString("text"));
+                            //distanceToLocation = distance.getString("text");
+
+                            JSONObject time = legsObjects.getJSONObject("duration");
+                            setDurationToLocation(time.getString("text"));
+                            //durationToLocation = time.getString("text");
+
+                            Toast.makeText(getContext(),distanceToLocation + " " + durationToLocation, Toast.LENGTH_LONG).show();
 
                             for (int j = 0; j < legs.length(); j++)
                             {
@@ -402,7 +416,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
             }
         });
-        Toast.makeText(getContext(), "Distance: " + distanceToLocation + " Time: " + durationToLocation, Toast.LENGTH_LONG).show();
 
         RetryPolicy retryPolicy = new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         jsonObjectRequest.setRetryPolicy(retryPolicy);
@@ -551,7 +564,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View view)
             {
                 direction();
-                LoadRouteInfo(poi.name, poi.latLng.latitude, poi.latLng.longitude);
+                LoadRouteInfo(poi.name, poi.latLng.latitude, poi.latLng.longitude, getDurationToLocation(), getDistanceToLocation());
                 btnOpenInfo.setVisibility(View.VISIBLE);
                 infoLayout.setVisibility(View.VISIBLE);
                 dialog.dismiss();
@@ -592,7 +605,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View view)
             {
                 direction();
-                LoadRouteInfo(poi.getTitle(), poi.getPosition().latitude, poi.getPosition().longitude);
+                LoadRouteInfo(poi.getTitle(), poi.getPosition().latitude, poi.getPosition().longitude, getDurationToLocation(), getDistanceToLocation());
                 btnOpenInfo.setVisibility(View.VISIBLE);
                 infoLayout.setVisibility(View.VISIBLE);
                 dialog.dismiss();
@@ -612,12 +625,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     //------------------------------- Method to populate route info card ---------------------------
-    private void LoadRouteInfo(String title, double latitude, double longitude) {
+    private void LoadRouteInfo(String title, double latitude, double longitude, String estTime, String estDis) {
          routeTitle.setText(title);
          routeAddress.setText(String.valueOf(latitude));
          routeOther.setText(String.valueOf(longitude));
-         routeEstTime.setText(distanceToLocation);
-         routeEstDis.setText(durationToLocation);
+         routeEstTime.setText(estTime);
+         routeEstDis.setText(estDis);
     }
     //----------------------------------------------------------------------------------------------
 
