@@ -63,8 +63,8 @@ public class Login extends AppCompatActivity
         indicator.setVisibility(View.INVISIBLE);
 
         //TODO: TEMPORARY LOGIN
-        txtEmail.setText("amber.bruil@gmail.com");
-        txtPassword.setText("amberisawe");
+        txtEmail.setText("lstuebchen@gmail.com");
+        txtPassword.setText("123456");
 
         //Listeners
         btnRegister.setOnClickListener(new View.OnClickListener()
