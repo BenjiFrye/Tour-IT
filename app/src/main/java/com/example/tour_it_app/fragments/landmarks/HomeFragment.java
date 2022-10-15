@@ -80,17 +80,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private static final int REQUEST_CODE = 44;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 22;
 
-    SupportMapFragment mapFragment;
+    //Map variables
+    private SupportMapFragment mapFragment;
     public static GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    double currentLat = 0, currentLong = 0;
-    LatLng currentLatLng;
-    LatLng destinationLatLng;
-
-    //Searching functionality
+    private LatLng currentLatLng;
+    private LatLng destinationLatLng;
     public static Marker newMarker = null;
-    PolylineOptions polylineOptions = null;
+    private PolylineOptions polylineOptions = null;
 
+    //Component variables
     private ImageButton btnOpenInfo;
     private ImageButton btnSmallHeart;
     private ImageButton btnCloseInfo;
@@ -101,7 +100,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private TextView routeEstTime;
     private TextView routeEstDis;
 
-    public String systemPreferance;
+    //Type variables
+    public String systemPreference;
+    private static String distanceToLocation = "Not Set";
+    private static String durationToLocation = "Not Set";
 
     //Firebase variables
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
@@ -109,100 +111,50 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     private Favourites fav;
 
-    private String distanceToLocation = "Not Set";
-
-    public String getDistanceToLocation() {
-        return distanceToLocation;
-    }
     public void setDistanceToLocation(String distanceToLocation) {
         this.distanceToLocation = distanceToLocation;
     }
 
-    public String getDurationToLocation() {
-        return durationToLocation;
-    }
     public void setDurationToLocation(String durationToLocation) {
         this.durationToLocation = durationToLocation;
     }
 
-    private String durationToLocation = "Not Set";
-
     public HomeFragment()
     {
         // Required empty public constructor
-
     }
 
-    public void getUserPreferance()
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        //Query based on current user ID
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-        Query query = dbRef.child("Users").child(UserID).child("Settings").child("System");
-
-        //check if current user is logged in
-        if (fUser != null)
-        {
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists())
-                    {
-                        if (snapshot.getValue().toString().trim().equals("Metric") )
-                        {
-                            systemPreferance = "metric";
-                        }
-                        else
-                        {
-                            systemPreferance= "imperial";
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("error", error.getMessage());
-                }
-            });
-        } else
-        {
-            Toast.makeText(getContext(),"No preferance",Toast.LENGTH_SHORT).show();
-        }
+        return view;
     }
 
+    //----------------------------- Main View Created method ---------------------------------------
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         //Finding ID's
         btnSmallHeart = getActivity().findViewById(R.id.btnSmallHeart);
-        btnSmallHeart.setTag("1");
-
-        //Route Information popup
         infoLayout = getActivity().findViewById(R.id.info_layout);
-        infoLayout.setVisibility(View.INVISIBLE);
-
         btnOpenInfo = getActivity().findViewById(R.id.btnOpenInfo);
-        btnOpenInfo.setVisibility(View.INVISIBLE);
-
         routeTitle = getActivity().findViewById(R.id.txtRouteTitle);
         routeAddress = getActivity().findViewById(R.id.txtRouteLat);
         routeOther = getActivity().findViewById(R.id.txtRouteLong);
         routeEstTime = getActivity().findViewById(R.id.txtRouteEstTime);;
         routeEstDis = getActivity().findViewById(R.id.txtRouteDis);
-
-
         btnCloseInfo = getActivity().findViewById(R.id.btnCloseInfo);
 
         //Default operations
+        btnSmallHeart.setTag("1");
+        infoLayout.setVisibility(View.INVISIBLE);
+        btnOpenInfo.setVisibility(View.INVISIBLE);
         fav = new Favourites();
 
         //Checks if user has given need permissions
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-
-        }
-        else
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
         }
@@ -235,6 +187,49 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
     }
+    //----------------------------------------------------------------------------------------------
+
+
+    //--------------------------- Retrieve User Settings (preference & system) ---------------------
+    public void getUserPreferance()
+    {
+        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        //Query based on current user ID
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        Query query = dbRef.child("Users").child(UserID).child("Settings").child("System");
+
+        //check if current user is logged in
+        if (fUser != null)
+        {
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists())
+                    {
+                        if (snapshot.getValue().toString().trim().equals("Metric") )
+                        {
+                            systemPreference = "metric";
+                        }
+                        else
+                        {
+                            systemPreference= "imperial";
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("error", error.getMessage());
+                }
+            });
+        } else
+        {
+            Toast.makeText(getContext(),"No preference",Toast.LENGTH_SHORT).show();
+        }
+    }
+    //----------------------------------------------------------------------------------------------
+
 
     //--------------------------- Method changes appearance of heart -------------------------------
     private void ChangeHeart() {
@@ -276,6 +271,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         markerInteraction(marker);
     }
 
+    //-----------------------------00oo0o0o-- MAP INTEGRATION --00oo0o0o----------------------------
     @SuppressLint("MissingPermission")
     public void getCurrentLocation()
     {
@@ -307,7 +303,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
     }
 
-    private void direction() // LatLng currentLocation, LatLng destination SIGNATURE TO BE ADDED
+    private void direction(String title, double latitude, double longitude)
     {
         getUserPreferance();
 
@@ -323,7 +319,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         String originLatLong = currentLatLng.latitude + ", " + currentLatLng.longitude;
         double originLat = currentLatLng.latitude, originLong = currentLatLng.longitude;
 
-        Toast.makeText(getContext(),"3: " + systemPreferance,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(),"3: " + systemPreference,Toast.LENGTH_SHORT).show();
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         String url = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
@@ -331,7 +327,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 .appendQueryParameter("destination", destinationLatLong) // + lat + ", " + lng   Where you want to go AKA the maker through the Find Routes button
                 .appendQueryParameter("origin", originLatLong) //  + currentLat + ", " + currentLng    Current Location
                 .appendQueryParameter("mode", "driving") // Will you be walking, driving or jogging
-                .appendQueryParameter("units", systemPreferance)
+                .appendQueryParameter("units", systemPreference)
                 .appendQueryParameter("key", "AIzaSyBHzZJu7d-ZpaB31W1_BOo590Tzi35XvLk").toString();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>()
         {
@@ -357,13 +353,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                             JSONObject distance = legsObjects.getJSONObject("distance");
                             setDistanceToLocation(distance.getString("text"));
-                            //distanceToLocation = distance.getString("text");
 
                             JSONObject time = legsObjects.getJSONObject("duration");
                             setDurationToLocation(time.getString("text"));
-                            //durationToLocation = time.getString("text");
 
-                            Toast.makeText(getContext(),distanceToLocation + " " + durationToLocation, Toast.LENGTH_LONG).show();
+                            //Method to load the route info into the popup dialogue
+                            LoadRouteInfo(title, latitude, longitude, durationToLocation, distanceToLocation);
 
                             for (int j = 0; j < legs.length(); j++)
                             {
@@ -470,15 +465,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        // Initialize view
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        return view; // Return view
-    }
-
     private void initializeMap()
     {
         LocationRequest locationRequest = new LocationRequest();
@@ -488,12 +474,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         locationRequest.setFastestInterval(3000);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
     }
+    //-----------------------------00oo0o0o-- MAP INTEGRATION --00oo0o0o----------------------------
 
+
+    //--------------------------------------- POI OnClick ------------------------------------------
     @Override
     public void onPoiClick(@NonNull PointOfInterest poi)
     {
-        //Toast.makeText(getContext(), "YOU CLICKED ON A POI", Toast.LENGTH_LONG).show();
-
         final String placeId = poi.placeId;
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.PHONE_NUMBER);
         final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
@@ -507,7 +494,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 {
                     Place place = response.getPlace();
 
-                    // ------------------------------ DEBUG ---------------------------------
+                    ////--0o0o0oo DEBUG 0o0o0oo--///
                     String locationID, locationName, locationNumber = null, locationLatLong;
                     locationID = place.getId();
                     locationName = place.getName();
@@ -525,7 +512,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                     + "\nPlace Name: " + locationName
                                     + "\nPlace Number: " + locationNumber
                                     + "\nPlace LatLong: " + locationLatLong);
-                    // ------------------------------ DEBUG ---------------------------------
 
                     destinationLatLng = new LatLng(poi.latLng.latitude, poi.latLng.longitude);
                     markerInteraction(poi);
@@ -541,12 +527,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
     }
+    //----------------------------------------------------------------------------------------------
 
+
+    //-------------------------------- Dialogue box: POI onClick -----------------------------------
     public void markerInteraction(PointOfInterest poi)
     {
-        //----------------------------- Code to display a dialog box -------------------------------
-        // Used when a user clicks on a POI on google maps, AKA Burger King -> Give me more info
-
         Dialog dialog = new Dialog(getContext(), R.style.DialogStyle);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setContentView(R.layout.marker_details);
@@ -563,10 +549,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
-                direction();
-                LoadRouteInfo(poi.name, poi.latLng.latitude, poi.latLng.longitude, getDurationToLocation(), getDistanceToLocation());
-                btnOpenInfo.setVisibility(View.VISIBLE);
-                infoLayout.setVisibility(View.VISIBLE);
+                direction(poi.name, poi.latLng.latitude, poi.latLng.longitude);
                 dialog.dismiss();
             }
         });
@@ -580,34 +563,30 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
         dialog.show();
-        //----------------------------- Code to display a dialog box -------------------------------
     }
+    //----------------------------------------------------------------------------------------------
 
-    public void markerInteraction(Marker poi)
+
+    //-------------------------------- Dialogue box: Marker onClick --------------------------------
+    public void markerInteraction(Marker marker)
     {
-        //----------------------------- Code to display a dialog box -------------------------------
-        // Used when a user clicks on a POI on google maps, AKA Burger King -> Give me more info
-
         Dialog dialog = new Dialog(getContext(), R.style.DialogStyle);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setContentView(R.layout.marker_details);
 
         TextView markerName = dialog.findViewById(R.id.markerName);
 
-        markerName.setText(poi.getTitle());
+        markerName.setText(marker.getTitle());
 
-        Button btn_Route = dialog.findViewById(R.id.btn_route);
-        Button btn_add_fav = dialog.findViewById(R.id.marker_layout);
+        ImageButton btn_Route = dialog.findViewById(R.id.btn_route);
+        ImageButton btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
 
         btn_Route.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                direction();
-                LoadRouteInfo(poi.getTitle(), poi.getPosition().latitude, poi.getPosition().longitude, getDurationToLocation(), getDistanceToLocation());
-                btnOpenInfo.setVisibility(View.VISIBLE);
-                infoLayout.setVisibility(View.VISIBLE);
+                direction(marker.getTitle(), marker.getPosition().latitude, marker.getPosition().longitude);
                 dialog.dismiss();
             }
         });
@@ -616,21 +595,26 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
-                CheckDuplication(poi.getTitle(), poi.getPosition().latitude, poi.getPosition().longitude, poi.getId());
+                CheckDuplication(marker.getTitle(), marker.getPosition().latitude, marker.getPosition().longitude, marker.getId());
                 dialog.dismiss();
             }
         });
         dialog.show();
-        //----------------------------- Code to display a dialog box -------------------------------
     }
+    //----------------------------------------------------------------------------------------------
+
 
     //------------------------------- Method to populate route info card ---------------------------
     private void LoadRouteInfo(String title, double latitude, double longitude, String estTime, String estDis) {
+
          routeTitle.setText(title);
          routeAddress.setText(String.valueOf(latitude));
          routeOther.setText(String.valueOf(longitude));
          routeEstTime.setText(estTime);
          routeEstDis.setText(estDis);
+
+        btnOpenInfo.setVisibility(View.VISIBLE);
+        infoLayout.setVisibility(View.VISIBLE);
     }
     //----------------------------------------------------------------------------------------------
 
@@ -660,8 +644,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     //-------------------------- Check if POI already exists in the db -----------------------------
     private void CheckDuplication(String title, double lat, double lon, String id) {
-
-        MainActivity mainAct = new MainActivity();
 
         //Retrieving current user's ID
         String userID = UserID;
