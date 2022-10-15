@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -225,7 +224,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             });
         } else
         {
-            Toast.makeText(getContext(),"No preference",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"No preference selected.",Toast.LENGTH_SHORT).show();
         }
     }
     //----------------------------------------------------------------------------------------------
@@ -268,6 +267,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onInfoWindowClick(@NonNull Marker marker)
     {
+        destinationLatLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
         markerInteraction(marker);
     }
 
@@ -287,16 +287,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     currentLat = location.getLatitude();
                     currentLong = location.getLongitude();
 
-                    //TODO: Debug code to set CURRENT LOCATION to Cape Town, FOR USE IN EMULATOR     - Remove for production
-                  //  currentLat = -33.819513;
-                  //  currentLong = 18.490832;
-                    //TODO: Debug code to set CURRENT LOCATION to Cape Town, FOR USE IN EMULATOR     - Remove for production
-
                     mMap.setMyLocationEnabled(true);
 
                     currentLatLng = new LatLng(currentLat, currentLong);
-                    //MarkerOptions options = new MarkerOptions().position(latLng).title("I am here");
-                    //options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
                 }
             }
@@ -318,8 +311,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         String originLatLong = currentLatLng.latitude + ", " + currentLatLng.longitude;
         double originLat = currentLatLng.latitude, originLong = currentLatLng.longitude;
-
-        Toast.makeText(getContext(),"3: " + systemPreference,Toast.LENGTH_SHORT).show();
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         String url = Uri.parse("https://maps.googleapis.com/maps/api/directions/json")
@@ -383,12 +374,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         }
                         mMap.addPolyline(polylineOptions);
 
-
                         newMarker = mMap.addMarker( new MarkerOptions().position(new LatLng(originLat, originLong))
                                 .title("Your current Location"));
-                        newMarker = mMap.addMarker( new MarkerOptions().position(new LatLng(destinationLat, destinationLong))
-                                .title("Your destination")
-                                .snippet("Distance: 300m      Time: 3 Minutes"));
                         LatLngBounds bounds = new LatLngBounds.Builder()
                                 .include(new LatLng(originLat, originLong))           //ORIGIN
                                 .include(new LatLng(destinationLat, destinationLong)).build();  //DESTINATION
@@ -514,7 +501,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                     + "\nPlace LatLong: " + locationLatLong);
 
                     destinationLatLng = new LatLng(poi.latLng.latitude, poi.latLng.longitude);
-                    markerInteraction(poi);
+                    markerInteraction(poi, place);
                 }
         ).addOnFailureListener((exception) ->
         {
@@ -531,18 +518,27 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
 
     //-------------------------------- Dialogue box: POI onClick -----------------------------------
-    public void markerInteraction(PointOfInterest poi)
+    public void markerInteraction(PointOfInterest poi, Place place)
     {
         Dialog dialog = new Dialog(getContext(), R.style.DialogStyle);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setContentView(R.layout.marker_details);
 
+        //Finding ID's
         TextView markerName = dialog.findViewById(R.id.markerName);
-
-        markerName.setText(poi.name);
-
+        TextView txtNumber = dialog.findViewById(R.id.txtNum);
         ImageButton btn_Route = dialog.findViewById(R.id.btn_route);
         ImageButton btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
+
+        //Setting texts
+        markerName.setText(poi.name);
+
+        if (place.getPhoneNumber() != null && !place.getPhoneNumber().isEmpty()) {
+            txtNumber.setText("Contact: " + place.getPhoneNumber());
+        } else {
+            txtNumber.setText("No contact information available.");
+        }
+
 
         btn_Route.setOnClickListener(new View.OnClickListener()
         {
@@ -574,12 +570,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         dialog.setCanceledOnTouchOutside(true);
         dialog.setContentView(R.layout.marker_details);
 
+        //Finding ID's
         TextView markerName = dialog.findViewById(R.id.markerName);
-
-        markerName.setText(marker.getTitle());
-
+        TextView txtNumber = dialog.findViewById(R.id.txtNum);
         ImageButton btn_Route = dialog.findViewById(R.id.btn_route);
         ImageButton btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
+
+        //Setting texts
+        markerName.setText(marker.getTitle());
+        txtNumber.setText("No contact information available.");
 
         btn_Route.setOnClickListener(new View.OnClickListener()
         {

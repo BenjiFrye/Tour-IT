@@ -1,6 +1,7 @@
 package com.example.tour_it_app.fragments.others;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EdgeEffect;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
+import com.example.tour_it_app.startup.GetStarted;
 import com.example.tour_it_app.startup.Login;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,6 +35,8 @@ public class AccountFragment extends Fragment {
     private TextView txtName;
     private TextView txtEmail;
     private AppCompatButton btnResetPass;
+    private Button btnLogout;
+
     private Activity activity = getActivity();
 
     //Firebase variables
@@ -57,6 +62,7 @@ public class AccountFragment extends Fragment {
         txtName = getView().findViewById(R.id.txtAccName);
         txtEmail = getView().findViewById(R.id.txtAccEmail);
         btnResetPass = getView().findViewById(R.id.btnConPassword);
+        btnLogout = getView().findViewById(R.id.btnLogout);
 
         //New instances
         mAuth = FirebaseAuth.getInstance();
@@ -93,6 +99,13 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LogoutDialogue();
+            }
+        });
+
     }
 
     //------------------------- Sending reset password link to email -------------------------------
@@ -105,7 +118,7 @@ public class AccountFragment extends Fragment {
             {
                 Toast.makeText(getActivity(),"A reset link has been sent to your email", Toast.LENGTH_LONG).show();
                 txtEmail.setText("");
-                Logout();
+                LogoutUser();
             }
         }).addOnFailureListener(new OnFailureListener()
         {
@@ -119,11 +132,42 @@ public class AccountFragment extends Fragment {
     }
     //----------------------------------------------------------------------------------------------
 
-    //---------------------------------- Log user out ----------------------------------------------
-    private void Logout() {
 
-        Intent i = new Intent(getActivity(), Login.class);
+    //----------------------------------- Logout User ----------------------------------------------
+    private void LogoutUser() {
+        Intent i = new Intent(getContext(), Login.class);
         startActivity(i);
+    }
+    //----------------------------------------------------------------------------------------------
+
+    //------------------------------------ Logout Dialogue -----------------------------------------
+    private void LogoutDialogue()
+    {
+        Dialog dialog = new Dialog(getContext(), R.style.DialogStyle);
+        dialog.setCanceledOnTouchOutside(false); //To prevent a user from clicking away
+        dialog.setContentView(R.layout.dialogue_logout);
+
+        AppCompatButton btnLogout = dialog.findViewById(R.id.btnYes);
+        AppCompatButton btnDontLogout = dialog.findViewById(R.id.btnNo);
+
+        btnLogout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                startActivity(new Intent(getContext(), GetStarted.class));
+                dialog.dismiss();
+            }
+        });
+
+        btnDontLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
     //----------------------------------------------------------------------------------------------
 }

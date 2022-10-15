@@ -14,6 +14,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
@@ -28,19 +29,15 @@ public class FavouritesFragment extends Fragment {
 
     //Component Variables
     private GridLayout layout;
-
-    private View cardView;
     private TextView txtName;
     private TextView txtLat;
     private TextView txtLong;
+    private ImageButton btnImageHeart;
 
-    //--------------------------------
+    //Type variables
     private String title;
     private String latitude;
     private String longitude;
-    //--------------------------------
-
-    private ImageButton btnImageHeart;
 
     public FavouritesFragment()
     {
@@ -58,29 +55,17 @@ public class FavouritesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
+        //Finding ID's
         layout = getView().findViewById(R.id.container);
-        //btnImageHeart = cardView.findViewById(R.id.btnHeart);
 
         //Default operations
         RetrieveFavouritesData();
 
-        //Listeners
-        /*
-        btnImageHeart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (btnImageHeart.isPressed()) {
-                    ChangeHeart();
-                }
-            }
-        });
-         */
     }
 
     //--------------------------- Method changes appearance of heart -------------------------------
     private void ChangeHeart()
     {
-        /*
         //Change appearance of image button based on what the image already is
         if (btnImageHeart.getTag() == "1"){
             RemoveFavourite();
@@ -90,14 +75,13 @@ public class FavouritesFragment extends Fragment {
             btnImageHeart.setImageResource(R.drawable.ic_heart_filled);
             btnImageHeart.setTag("1");
         }
-        */
+
     }
     //----------------------------------------------------------------------------------------------
 
     //-------------------------- This method retrieves favourites data from db ---------------------
     private void RetrieveFavouritesData()
     {
-
         MainActivity mainAct = new MainActivity();
         DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference();
 
@@ -148,8 +132,6 @@ public class FavouritesFragment extends Fragment {
         txtLat.setText(lat);
         txtLong.setText(lon);
 
-        //btnImageHeart.setTag("1");
-
         if (cardView.getParent() != null)
         {
             ((ViewGroup)cardView.getParent()).removeView(cardView);
@@ -160,8 +142,11 @@ public class FavouritesFragment extends Fragment {
     }
     //----------------------------------------------------------------------------------------------
 
+    //---------------------------- Method to remove a specific favourited item ---------------------
     private void RemoveFavourite()
     {
         //TODO: REMOVE FAVOURITE IMPLEMENTATION
     }
+    //----------------------------------------------------------------------------------------------
+
 }
