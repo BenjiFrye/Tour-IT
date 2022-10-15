@@ -90,7 +90,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_login"
-            android:layout_width="230dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
@@ -105,7 +105,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_register"
-            android:layout_width="230dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="90dp"
