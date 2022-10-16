@@ -1,10 +1,14 @@
 package com.example.tour_it_app.fragments.landmarks;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.example.tour_it_app.MainActivity.UserID;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.location.Location;
@@ -39,9 +43,13 @@ import com.example.tour_it_app.MainActivity;
 import com.example.tour_it_app.R;
 import com.example.tour_it_app.object_classes.Favourites;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,7 +60,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PointOfInterest;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
@@ -172,12 +182,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
 
+        /*
         btnSmallHeart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ChangeHeart();
             }
         });
+         */
 
         btnCloseInfo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,6 +241,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
     //----------------------------------------------------------------------------------------------
 
+    private void checkGPS()
+    {
+
+    }
+
 
     //--------------------------- Method changes appearance of heart -------------------------------
     private void ChangeHeart() {
@@ -256,7 +273,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         googleMap.setOnPoiClickListener(this);
         googleMap.setOnMarkerClickListener(this);
         googleMap.setOnInfoWindowClickListener(this);
-
     }
 
     @Override
@@ -454,6 +470,24 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @NonNull Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101)
+        {
+            if (resultCode == RESULT_OK)
+            {
+                Toast.makeText(getContext(), "Now GPS is enabled", Toast.LENGTH_SHORT).show();
+                getCurrentLocation();
+            }
+            if (resultCode == RESULT_CANCELED)
+            {
+                Toast.makeText(getContext(), "Denied GPS enablance", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void initializeMap()
     {
         LocationRequest locationRequest = new LocationRequest();
@@ -462,6 +496,46 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         locationRequest.setSmallestDisplacement(16);
         locationRequest.setFastestInterval(3000);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest)
+                .setAlwaysShow(true);
+
+        Task<LocationSettingsResponse> locationSettingsResponseTask = LocationServices.getSettingsClient(getContext())
+                .checkLocationSettings(builder.build());
+
+        locationSettingsResponseTask.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task)
+            {
+                try
+                {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    Toast.makeText(getContext(), "GPS is already enabled", Toast.LENGTH_SHORT).show();
+                    getCurrentLocation();
+                }
+                catch (ApiException e)
+                {
+                    if (e.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED)
+                    {
+                        ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                        try
+                        {
+                            resolvableApiException.startResolutionForResult(getActivity(), 101);
+                        }
+                        catch (IntentSender.SendIntentException sendIntentException)
+                        {
+                            sendIntentException.printStackTrace();
+                        }
+                        if (e.getStatusCode() == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE)
+                        {
+                            Toast.makeText(getContext(), "Setting not available", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        });
     }
     //-----------------------------00oo0o0o-- MAP INTEGRATION --00oo0o0o----------------------------
 
