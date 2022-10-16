@@ -136,7 +136,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         //Finding ID's
-        btnSmallHeart = getActivity().findViewById(R.id.btnSmallHeart);
+       // btnSmallHeart = getActivity().findViewById(R.id.btnSmallHeart);
         infoLayout = getActivity().findViewById(R.id.info_layout);
         btnOpenInfo = getActivity().findViewById(R.id.btnOpenInfo);
         routeTitle = getActivity().findViewById(R.id.txtRouteTitle);
@@ -147,7 +147,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         btnCloseInfo = getActivity().findViewById(R.id.btnCloseInfo);
 
         //Default operations
-        btnSmallHeart.setTag("1");
+       // btnSmallHeart.setTag("1");
         infoLayout.setVisibility(View.INVISIBLE);
         btnOpenInfo.setVisibility(View.INVISIBLE);
         fav = new Favourites();
@@ -233,6 +233,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     //--------------------------- Method changes appearance of heart -------------------------------
     private void ChangeHeart() {
 
+        /*
         //Change appearance of image button based on what the image already is
         if (btnSmallHeart.getTag() == "1"){
             btnSmallHeart.setImageResource(R.drawable.ic_small_heart_filled);
@@ -240,7 +241,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             btnSmallHeart.setImageResource(R.drawable.ic_small_heart_unfilled);
             btnSmallHeart.setTag("1");
-        }
+        } */
     }
     //----------------------------------------------------------------------------------------------
 
