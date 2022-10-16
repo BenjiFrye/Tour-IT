@@ -30,7 +30,7 @@
             <TextView
                 android:id="@+id/txtRouteTitle"
                 android:layout_width="150dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="40dp"
                 android:fontFamily="@font/poppins_semibold"
@@ -67,7 +67,8 @@
                 android:layout_marginStart="200dp"
                 android:layout_marginTop="60dp"
                 android:background="@android:color/transparent"
-                app:srcCompat="@drawable/ic_small_heart_filled" />
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_small_heart_unfilled" />
         </FrameLayout>
 
         <TextView

@@ -235,10 +235,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         //Change appearance of image button based on what the image already is
         if (btnSmallHeart.getTag() == "1"){
-            btnSmallHeart.setImageResource(R.drawable.ic_small_heart_unfilled);
+            btnSmallHeart.setImageResource(R.drawable.ic_small_heart_filled);
             btnSmallHeart.setTag("2");
         } else {
-            btnSmallHeart.setImageResource(R.drawable.ic_small_heart_filled);
+            btnSmallHeart.setImageResource(R.drawable.ic_small_heart_unfilled);
             btnSmallHeart.setTag("1");
         }
     }
@@ -296,6 +296,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
     }
 
+    //----------------------------------- Retrieve direction info ----------------------------------
     private void direction(String title, double latitude, double longitude)
     {
         getUserPreferance();
@@ -403,10 +404,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         jsonObjectRequest.setRetryPolicy(retryPolicy);
         requestQueue.add(jsonObjectRequest);
     }
+    //----------------------------------------------------------------------------------------------
 
     private List<LatLng> decodePoly(String encoded)
     {
-
         List<LatLng> poly = new ArrayList<LatLng>();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
@@ -620,8 +621,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     //------------------------------ Method to add location to favourites db -----------------------
     private void AddLocationToDB(String title, double lat, double lon, String id) {
-
-        MainActivity mainAct = new MainActivity();
 
         //Retrieving current user's ID
         String userID = UserID;
