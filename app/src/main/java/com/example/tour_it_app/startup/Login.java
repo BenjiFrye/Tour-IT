@@ -4,10 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -82,16 +87,26 @@ public class Login extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                //Check that user has entered their email and password
-                if (!txtEmail.getText().toString().isEmpty() && !txtPassword.getText().toString().isEmpty()) {
-                    btnLogin.setVisibility(View.INVISIBLE);
-                    indicator.setVisibility(View.VISIBLE);
-                LoginUser();
-                } else {
-                    btnLogin.setVisibility(View.VISIBLE);
-                    indicator.setVisibility(View.INVISIBLE);
-                    Toast.makeText(Login.this, "Please enter both your email and password.",Toast.LENGTH_SHORT).show();
+                if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                {
+                    Toast.makeText(Login.this, "Location is already given!",Toast.LENGTH_SHORT).show();
+                    //Check that user has entered their email and password
+                    if (!txtEmail.getText().toString().isEmpty() && !txtPassword.getText().toString().isEmpty()) {
+                        btnLogin.setVisibility(View.INVISIBLE);
+                        indicator.setVisibility(View.VISIBLE);
+                        LoginUser();
+                    } else {
+                        btnLogin.setVisibility(View.VISIBLE);
+                        indicator.setVisibility(View.INVISIBLE);
+                        Toast.makeText(Login.this, "Please enter both your email and password.",Toast.LENGTH_SHORT).show();
+                    }
                 }
+                else
+                {
+                    requestLocationPermission();
+                }
+
+
             }
         });
 
@@ -103,6 +118,53 @@ public class Login extends AppCompatActivity
             }
         });
 
+    }
+
+    private static final int REQUEST_CODE = 44;
+    //Requesting location permission
+    private void requestLocationPermission()
+    {
+        if(ActivityCompat.shouldShowRequestPermissionRationale(Login.this, Manifest.permission.ACCESS_FINE_LOCATION))
+        {
+            new AlertDialog.Builder(this)
+                    .setTitle("Location Permission is Required")
+                    .setMessage("This application requires Location Services to run. Please enable to proceed!").setPositiveButton("OK", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    ActivityCompat.requestPermissions(Login.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+                }
+            }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    dialogInterface.dismiss();
+                }
+            }).create().show();
+        }
+        else
+        {
+            ActivityCompat.requestPermissions(Login.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Permission not granted", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     //-------------------------------Logging user in implementation---------------------------------

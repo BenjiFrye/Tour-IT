@@ -241,7 +241,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
     //----------------------------------------------------------------------------------------------
 
-    private void checkGPS()
+    private void getGPS()
     {
 
     }
@@ -621,6 +621,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
+                getCurrentLocation();
                 direction(poi.name, poi.latLng.latitude, poi.latLng.longitude);
                 dialog.dismiss();
             }
@@ -661,6 +662,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
+                getCurrentLocation();
                 direction(marker.getTitle(), marker.getPosition().latitude, marker.getPosition().longitude);
                 dialog.dismiss();
             }
