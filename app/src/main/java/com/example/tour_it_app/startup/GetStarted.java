@@ -12,25 +12,20 @@ import com.example.tour_it_app.R;
 
 public class GetStarted extends AppCompatActivity {
 
-
-    // ---------------- * Component declaration * ------------------ //
-
+    //Component variables
     private AppCompatButton btnGetStarted;
     private TextView btnLogin1;
-
-    // ------------------------------------------------------------ //
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started);
 
+        //Finding ID's
         btnGetStarted = findViewById(R.id.btn_get_started);
         btnLogin1 = findViewById(R.id.btn_login_here_2);
 
-        // --------------------------------- * Listeners * -------------------------------------- //
-
+        //Listeners
         btnGetStarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,7 +41,5 @@ public class GetStarted extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-        // -------------------------------------------------------------------------------------- //
     }
 }

@@ -36,25 +36,12 @@ import java.util.List;
 
 public class SearchFragment extends androidx.fragment.app.DialogFragment
 {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
+    //Component variables
     private ImageView backSpace;
 
     public SearchFragment()
     {
         // Required empty public constructor
-    }
-
-    public static SearchFragment newInstance(String title)
-    {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString("Search Dialogue",title);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -66,6 +53,7 @@ public class SearchFragment extends androidx.fragment.app.DialogFragment
         return dialog;
     }
 
+    //------------------------ 00o0o0o SEARCH DIALOGUE IMPLEMENTATION ------------------------------
     @Override
     public void onStart()
     {
@@ -102,4 +90,5 @@ public class SearchFragment extends androidx.fragment.app.DialogFragment
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
+    //----------------------------------------------------------------------------------------------
 }

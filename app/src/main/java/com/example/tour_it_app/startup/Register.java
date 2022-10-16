@@ -67,13 +67,6 @@ public class Register extends AppCompatActivity
         txtPass = findViewById(R.id.edtPass);
         txtConPass = findViewById(R.id.edtConPass);
 
-        //TODO: TEMPORARY REGISTRATION
-        txtName.setText("");
-        txtSurname.setText("");
-        txtEmail.setText("");
-        txtPass.setText("");
-        txtConPass.setText("");
-
         //New instance
         user = new Users();
         mAuth = FirebaseAuth.getInstance();
@@ -110,13 +103,8 @@ public class Register extends AppCompatActivity
                startActivity(i);
             }
         });
-
     }
 
-
-    /*
-     * ---------------------- SUMMARY: Registering Users implementation ----------------------------
-     */
     //---------------Checking if all inputs are valid (email, password matching)--------------------
     private void CheckUserInput()
     {

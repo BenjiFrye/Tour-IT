@@ -37,8 +37,6 @@ public class AccountFragment extends Fragment {
     private AppCompatButton btnResetPass;
     private Button btnLogout;
 
-    private Activity activity = getActivity();
-
     //Firebase variables
     private FirebaseAuth mAuth;
 
@@ -155,7 +153,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View view)
             {
-                startActivity(new Intent(getContext(), GetStarted.class));
+                LogoutUser();
                 dialog.dismiss();
             }
         });

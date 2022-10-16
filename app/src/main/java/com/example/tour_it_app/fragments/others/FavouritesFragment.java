@@ -60,12 +60,12 @@ public class FavouritesFragment extends Fragment {
 
         //Default operations
         RetrieveFavouritesData();
-
     }
 
     //--------------------------- Method changes appearance of heart -------------------------------
     private void ChangeHeart()
     {
+        /*
         //Change appearance of image button based on what the image already is
         if (btnImageHeart.getTag() == "1"){
             RemoveFavourite();
@@ -74,7 +74,7 @@ public class FavouritesFragment extends Fragment {
         } else {
             btnImageHeart.setImageResource(R.drawable.ic_heart_filled);
             btnImageHeart.setTag("1");
-        }
+        } */
 
     }
     //----------------------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ public class FavouritesFragment extends Fragment {
     //---------------------------- Method to remove a specific favourited item ---------------------
     private void RemoveFavourite()
     {
-        //TODO: REMOVE FAVOURITE IMPLEMENTATION
+        //TODO: REMOVE FAVOURITE IMPLEMENTATION - POE ONLY
     }
     //----------------------------------------------------------------------------------------------
 
