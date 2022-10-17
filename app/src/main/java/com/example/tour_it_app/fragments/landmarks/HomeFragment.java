@@ -241,12 +241,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
     //----------------------------------------------------------------------------------------------
 
-    private void getGPS()
-    {
-
-    }
-
-
     //--------------------------- Method changes appearance of heart -------------------------------
     private void ChangeHeart() {
 
