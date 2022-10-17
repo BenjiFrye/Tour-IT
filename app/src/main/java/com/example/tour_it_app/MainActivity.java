@@ -226,6 +226,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPlaceSelected(@NonNull Place place)
             {
+                mMap.clear();
                 final LatLng latLng = place.getLatLng();
 
                 Log.i("LOG", "OnPlaceSelected: " + latLng.latitude + "\n" + latLng.latitude);
