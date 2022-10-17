@@ -202,7 +202,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
 
     //--------------------------- Retrieve User Settings (preference & system) ---------------------
-    public void getUserPreferance()
+    public void GetUserPreference()
     {
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -266,7 +266,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void onMapReady(@NonNull GoogleMap googleMap)
     {
         getCurrentLocation();
-        getUserPreferance();
+        GetUserPreference();
 
         mMap = googleMap;
 
@@ -316,7 +316,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     //----------------------------------- Retrieve direction info ----------------------------------
     private void direction(String title, double latitude, double longitude)
     {
-        getUserPreferance();
+        GetUserPreference();
 
         if (newMarker != null)
         {
@@ -386,7 +386,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                 }
                             }
                             polylineOptions.addAll(points);
-                            polylineOptions.width(15); // To change the thinkness of the line
+                            polylineOptions.width(15); // To change the thickness of the line
                             polylineOptions.color(ContextCompat.getColor(getContext(), R.color.custom1));
                             polylineOptions.geodesic(true);
                         }

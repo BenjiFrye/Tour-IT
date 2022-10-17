@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +47,9 @@ public class Login extends AppCompatActivity
     //Firebase variables
     private FirebaseAuth mAuth;
 
+    //Type variables
+    private static final int REQUEST_CODE = 44;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -67,10 +71,6 @@ public class Login extends AppCompatActivity
         btnLogin.setVisibility(View.VISIBLE);
         indicator.setVisibility(View.INVISIBLE);
 
-        //TODO: TEMPORARY LOGIN
-        txtEmail.setText("lstuebchen@gmail.com");
-        txtPassword.setText("123456");
-
         //Listeners
         btnRegister.setOnClickListener(new View.OnClickListener()
         {
@@ -89,7 +89,6 @@ public class Login extends AppCompatActivity
             {
                 if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 {
-                    Toast.makeText(Login.this, "Location is already given!",Toast.LENGTH_SHORT).show();
                     //Check that user has entered their email and password
                     if (!txtEmail.getText().toString().isEmpty() && !txtPassword.getText().toString().isEmpty()) {
                         btnLogin.setVisibility(View.INVISIBLE);
@@ -105,8 +104,6 @@ public class Login extends AppCompatActivity
                 {
                     requestLocationPermission();
                 }
-
-
             }
         });
 
@@ -120,8 +117,7 @@ public class Login extends AppCompatActivity
 
     }
 
-    private static final int REQUEST_CODE = 44;
-    //Requesting location permission
+    //----------------------------------Requesting location permission------------------------------
     private void requestLocationPermission()
     {
         if(ActivityCompat.shouldShowRequestPermissionRationale(Login.this, Manifest.permission.ACCESS_FINE_LOCATION))
@@ -149,7 +145,9 @@ public class Login extends AppCompatActivity
             ActivityCompat.requestPermissions(Login.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
         }
     }
+    //----------------------------------------------------------------------------------------------
 
+    //------------------------------- Check for Permission -----------------------------------------
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -158,14 +156,16 @@ public class Login extends AppCompatActivity
         if (requestCode == REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
-                Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_LONG).show();
+                LoginUser();
+                Log.d("PERMISSION_GRANTED","Permission has been granted");
             }
             else
             {
-                Toast.makeText(getApplicationContext(), "Permission not granted", Toast.LENGTH_LONG).show();
+                Log.d("PERMISSION_NOT_GRANTED","Permission has not been granted");
             }
         }
     }
+    //----------------------------------------------------------------------------------------------
 
     //-------------------------------Logging user in implementation---------------------------------
     private void LoginUser()
@@ -195,6 +195,8 @@ public class Login extends AppCompatActivity
                     else
                     {
                         //If email has been valid and password and email combination is authenticated
+                        btnLogin.setVisibility(View.INVISIBLE);
+                        indicator.setVisibility(View.VISIBLE);
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();
                     }
