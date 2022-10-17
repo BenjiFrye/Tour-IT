@@ -87,22 +87,19 @@ public class Login extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                {
-                    //Check that user has entered their email and password
-                    if (!txtEmail.getText().toString().isEmpty() && !txtPassword.getText().toString().isEmpty()) {
+                //Check that user has entered their email and password
+                if (!txtEmail.getText().toString().isEmpty() && !txtPassword.getText().toString().isEmpty()) {
+                    if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                         btnLogin.setVisibility(View.INVISIBLE);
                         indicator.setVisibility(View.VISIBLE);
                         LoginUser();
                     } else {
-                        btnLogin.setVisibility(View.VISIBLE);
-                        indicator.setVisibility(View.INVISIBLE);
-                        Toast.makeText(Login.this, "Please enter both your email and password.",Toast.LENGTH_SHORT).show();
+                        requestLocationPermission();
                     }
-                }
-                else
-                {
-                    requestLocationPermission();
+                } else {
+                    btnLogin.setVisibility(View.VISIBLE);
+                    indicator.setVisibility(View.INVISIBLE);
+                    Toast.makeText(Login.this, "Please enter both your email and password.",Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -13,7 +13,7 @@
         android:layout_width="273dp"
         android:layout_height="207dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="70dp"
         app:srcCompat="@drawable/logo2_lighter_light_text" />
 
     <TextView
