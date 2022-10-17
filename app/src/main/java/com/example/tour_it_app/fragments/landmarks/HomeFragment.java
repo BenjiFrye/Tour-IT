@@ -478,12 +478,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         {
             if (resultCode == RESULT_OK)
             {
-                Toast.makeText(getContext(), "Now GPS is enabled", Toast.LENGTH_SHORT).show();
                 getCurrentLocation();
             }
             if (resultCode == RESULT_CANCELED)
             {
-                Toast.makeText(getContext(), "Denied GPS enablance", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Please enable your location services.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -512,7 +511,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 try
                 {
                     LocationSettingsResponse response = task.getResult(ApiException.class);
-                    Toast.makeText(getContext(), "GPS is already enabled", Toast.LENGTH_SHORT).show();
                     getCurrentLocation();
                 }
                 catch (ApiException e)
