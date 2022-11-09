@@ -28,6 +28,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +100,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public static Marker newMarker = null;
     private PolylineOptions polylineOptions = null;
 
+    String typeOfLocomotive;
+
     //Component variables
     private ImageButton btnOpenInfo;
     private ImageButton btnSmallHeart;
@@ -108,6 +112,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private TextView routeOther;
     private TextView routeEstTime;
     private TextView routeEstDis;
+    private TextView fromTxt;
 
     //Type variables
     public String systemPreference;
@@ -155,6 +160,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         routeEstTime = getActivity().findViewById(R.id.txtRouteEstTime);;
         routeEstDis = getActivity().findViewById(R.id.txtRouteDis);
         btnCloseInfo = getActivity().findViewById(R.id.btnCloseInfo);
+        fromTxt = getActivity().findViewById(R.id.fromTxt);
 
         //Default operations
        // btnSmallHeart.setTag("1");
@@ -335,7 +341,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 .buildUpon()
                 .appendQueryParameter("destination", destinationLatLong) // + lat + ", " + lng   Where you want to go AKA the maker through the Find Routes button
                 .appendQueryParameter("origin", originLatLong) //  + currentLat + ", " + currentLng    Current Location
-                .appendQueryParameter("mode", "driving") // Will you be walking, driving or jogging
+                .appendQueryParameter("mode", typeOfLocomotive) // Will you be walking, driving or bicycling
                 .appendQueryParameter("units", systemPreference)
                 .appendQueryParameter("key", "AIzaSyBHzZJu7d-ZpaB31W1_BOo590Tzi35XvLk").toString();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>()
@@ -606,6 +612,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         ImageButton btn_Route = dialog.findViewById(R.id.btn_route);
         ImageButton btn_add_fav = dialog.findViewById(R.id.btn_add_fav);
 
+        //The way the user will get to their destination
+
+        RadioButton walkingLocomotive = dialog.findViewById(R.id.walkingLocomotive);
+        RadioButton bicyclingLocomotive = dialog.findViewById(R.id.bicyclingLocomotive);
+        RadioButton drivingLocomotive = dialog.findViewById(R.id.drivingLocomotive);
+
         //Setting texts
         markerName.setText(poi.name);
 
@@ -621,8 +633,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
+                // one of the radio buttons is checked
+                if(drivingLocomotive.isChecked())
+                {
+                    // is checked
+                    typeOfLocomotive = "driving";
+                    fromTxt.setText("Driving From: Current Location");
+                }
+                else if (bicyclingLocomotive.isChecked())
+                {
+                    // not checked
+                    typeOfLocomotive = "bicycling";
+                    fromTxt.setText("Cycling From: Current Location");
+                }
+                else if (walkingLocomotive.isChecked())
+                {
+                    // not checked
+                    typeOfLocomotive = "walking";
+                    fromTxt.setText("Walking From: Current Location");
+                }
+
                 direction(poi.name, poi.latLng.latitude, poi.latLng.longitude);
                 dialog.dismiss();
+
             }
         });
         btn_add_fav.setOnClickListener(new View.OnClickListener()

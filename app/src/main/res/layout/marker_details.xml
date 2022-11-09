@@ -139,6 +139,63 @@
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/selectedLocomotive">
+
+
+                <RadioButton
+                    android:id="@+id/drivingLocomotive"
+                    android:checked="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingRight="25dp"
+                    android:text="Drive"
+                    android:textColor="@color/custom4"/>
+
+                <RadioButton
+                    android:id="@+id/bicyclingLocomotive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingRight="25dp"
+                    android:text="Bicycle"
+                    android:textColor="@color/custom4"/>
+
+                <RadioButton
+                    android:id="@+id/walkingLocomotive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Walk"
+                    android:textColor="@color/custom4"/>
+            </RadioGroup>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
 
     </LinearLayout>
 
