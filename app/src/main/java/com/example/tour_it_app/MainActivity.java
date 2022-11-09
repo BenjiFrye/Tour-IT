@@ -333,6 +333,14 @@ public class MainActivity extends AppCompatActivity
             drawerLayout.closeDrawer(GravityCompat.END);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+
+        if (mainDrawer.isDrawerOpen(Gravity.RIGHT)) {
+            mainDrawer.closeDrawer(GravityCompat.END);
+        }
+    }
     //----------------------------------------------------------------------------------------------
 
     //---------------------------- Getting currently logged in user details ------------------------
@@ -415,11 +423,7 @@ public class MainActivity extends AppCompatActivity
     }
     //----------------------------------------------------------------------------------------------
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
+
 
 
 }
