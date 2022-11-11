@@ -16,90 +16,132 @@
         android:layout_marginTop="50dp"
         app:srcCompat="@drawable/logo2_lighter_light_text" />
 
-    <EditText
-        android:id="@+id/edtName"
-        android:layout_width="275dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="@color/custom13"
-        android:ems="10"
-        android:fontFamily="@font/poppins_regular"
-        android:hint="First Name"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:paddingBottom="4dp"
-        android:textColor="@color/white"
+        android:layout_marginTop="30dp"
         android:textColorHint="@color/custom13"
-        android:textSize="17sp" />
+        app:helperTextTextColor="@color/custom9"
+        app:hintTextColor="@color/custom9"
+        app:placeholderTextColor="@color/custom13">
 
-    <EditText
-        android:id="@+id/edtSurname"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/custom13"
-        android:ems="10"
-        android:fontFamily="@font/poppins_regular"
-        android:hint="Last Name"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:paddingBottom="4dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/custom13"
-        android:textSize="17sp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtName"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:drawable/edit_text"
+            android:backgroundTint="@android:color/transparent"
+            android:fontFamily="@font/poppins_regular"
+            android:foregroundTint="@color/custom9"
+            android:hint="First Name"
+            android:paddingStart="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/custom13" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/edtEmail"
-        android:layout_width="275dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/custom13"
-        android:ems="10"
-        android:fontFamily="@font/poppins_regular"
-        android:hint="Email"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:paddingBottom="4dp"
-        android:textColor="@color/white"
         android:textColorHint="@color/custom13"
-        android:textSize="17sp" />
+        app:helperTextTextColor="@color/custom9"
+        app:hintTextColor="@color/custom9"
+        app:placeholderTextColor="@color/custom13">
 
-    <EditText
-        android:id="@+id/edtPass"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/custom13"
-        android:ems="10"
-        android:fontFamily="@font/poppins_regular"
-        android:hint="Password"
-        android:inputType="textPersonName|textPassword"
-        android:minHeight="48dp"
-        android:paddingBottom="4dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/custom13"
-        android:textSize="17sp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtSurname"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:drawable/edit_text"
+            android:backgroundTint="@android:color/transparent"
+            android:fontFamily="@font/poppins_regular"
+            android:foregroundTint="@color/custom9"
+            android:hint="Last Name"
+            android:paddingStart="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/custom13" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/edtConPass"
-        android:layout_width="275dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/custom13"
-        android:ems="10"
-        android:fontFamily="@font/poppins_regular"
-        android:hint="Confirm Password"
-        android:inputType="textPersonName|textPassword"
-        android:minHeight="48dp"
-        android:paddingBottom="4dp"
-        android:textColor="@color/white"
         android:textColorHint="@color/custom13"
-        android:textSize="17sp" />
+        app:helperTextTextColor="@color/custom9"
+        app:hintTextColor="@color/custom9"
+        app:placeholderTextColor="@color/custom13">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtEmail"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:drawable/edit_text"
+            android:backgroundTint="@android:color/transparent"
+            android:fontFamily="@font/poppins_regular"
+            android:foregroundTint="@color/custom9"
+            android:hint="Email"
+            android:paddingStart="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/custom13" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColorHint="@color/custom13"
+        app:helperTextTextColor="@color/custom9"
+        app:hintTextColor="@color/custom9"
+        app:placeholderTextColor="@color/custom13">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtPass"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:drawable/edit_text"
+            android:backgroundTint="@android:color/transparent"
+            android:fontFamily="@font/poppins_regular"
+            android:foregroundTint="@color/custom9"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingStart="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/custom13" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColorHint="@color/custom13"
+        app:helperTextTextColor="@color/custom9"
+        app:hintTextColor="@color/custom9"
+        app:placeholderTextColor="@color/custom13">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtConPass"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:drawable/edit_text"
+            android:backgroundTint="@android:color/transparent"
+            android:fontFamily="@font/poppins_regular"
+            android:foregroundTint="@color/custom9"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:paddingStart="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/custom13" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_sign_up"
