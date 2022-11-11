@@ -112,7 +112,7 @@ public class FavouritesFragment extends Fragment {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("error", error.getMessage());
+
             }
         });
     }

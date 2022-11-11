@@ -237,7 +237,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("error", error.getMessage());
                 }
             });
         } else
@@ -576,12 +575,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         locationNumber = place.getPhoneNumber();
                     }
                     locationLatLong = "Latitude " + poi.latLng.latitude + ", Longitude " + poi.latLng.longitude;
-                    Log.i("Location Data",
-                            "\nPlace ID: " + locationID
-                                    + "\nPlace Name: " + locationName
-                                    + "\nPlace Number: " + locationNumber
-                                    + "\nPlace LatLong: " + locationLatLong);
-
                     destinationLatLng = new LatLng(poi.latLng.latitude, poi.latLng.longitude);
                     markerInteraction(poi, place);
                 }
@@ -590,7 +583,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             if (exception instanceof ApiException)
             {
                 final ApiException apiException = (ApiException) exception;
-                Log.e("TAG:PlaceNotFound - ", "Place not found: " + exception.getMessage());
                 final int statusCode = apiException.getStatusCode();
                 // TODO: Handle error with given status code.
             }

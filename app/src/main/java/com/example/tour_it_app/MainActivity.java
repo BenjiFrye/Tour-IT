@@ -240,7 +240,6 @@ public class MainActivity extends AppCompatActivity
             {
                 final LatLng latLng = place.getLatLng();
 
-                Log.i("LOG", "OnPlaceSelected: " + latLng.latitude + "\n" + latLng.latitude);
 
                 if (newMarker != null)
                 {
@@ -259,7 +258,7 @@ public class MainActivity extends AppCompatActivity
                     }
                     catch (IOException IOexception)
                     {
-                        Log.e("ERROR: ", "IOexception: " + IOexception.getMessage());
+
                     }
 
                     if (addressList.size() > 0)
@@ -365,14 +364,12 @@ public class MainActivity extends AppCompatActivity
                             currentEmail = accUser.getEmail();
                             currentName = accUser.getFirstName() + " " + accUser.getLastName();
                             SetNavDrawerUserDetails();
-                            Log.d("Email","accUser");
                         }
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("error", error.getMessage());
                 }
             });
 
