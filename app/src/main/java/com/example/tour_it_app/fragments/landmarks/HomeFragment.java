@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -68,6 +69,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -105,23 +108,34 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     //Component variables
     private ImageButton btnOpenInfo;
     private ImageButton btnSmallHeart;
+    private ImageButton btnCloseSettings;
     private ImageButton btnCloseInfo;
+    private MaterialButton btnUpdateSett;
     private LinearLayout infoLayout;
+    private LinearLayout settingsLayout;
+    private FloatingActionButton fabSettings;
     private TextView routeTitle;
     private TextView routeAddress;
     private TextView routeOther;
     private TextView routeEstTime;
     private TextView routeEstDis;
     private TextView fromTxt;
+    private RadioGroup rgSystem;
+    private RadioGroup rgPreference;
 
     //Type variables
     public String systemPreference;
     private static String distanceToLocation = "Not Set";
     private static String durationToLocation = "Not Set";
+    private static String userID;
+    private String system = "Metric";
+    private String preference = "Popular";
 
     //Firebase variables
     private FirebaseDatabase db = FirebaseDatabase.getInstance();
     private DatabaseReference dbUsersRef = db.getReference("Users");
+    private FirebaseAuth mAuth;
+
 
     private Favourites fav;
 
@@ -151,7 +165,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         //Finding ID's
-       // btnSmallHeart = getActivity().findViewById(R.id.btnSmallHeart);
         infoLayout = getActivity().findViewById(R.id.info_layout);
         btnOpenInfo = getActivity().findViewById(R.id.btnOpenInfo);
         routeTitle = getActivity().findViewById(R.id.txtRouteTitle);
@@ -161,12 +174,26 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         routeEstDis = getActivity().findViewById(R.id.txtRouteDis);
         btnCloseInfo = getActivity().findViewById(R.id.btnCloseInfo);
         fromTxt = getActivity().findViewById(R.id.fromTxt);
+        fabSettings = getActivity().findViewById(R.id.fab);
+        settingsLayout = getActivity().findViewById(R.id.layout_settings);
+        btnCloseSettings = getActivity().findViewById(R.id.btnCloseSett);
+        rgSystem = getActivity().findViewById(R.id.groupSystem);
+        rgPreference = getActivity().findViewById(R.id.groupPref);
+        btnUpdateSett = getActivity().findViewById(R.id.btnUpdateSett);
 
         //Default operations
-       // btnSmallHeart.setTag("1");
         infoLayout.setVisibility(View.INVISIBLE);
         btnOpenInfo.setVisibility(View.INVISIBLE);
+        settingsLayout.setVisibility(View.INVISIBLE);
+        fabSettings.setVisibility(View.VISIBLE);
         fav = new Favourites();
+
+        //Firebase instances
+        mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
+
+        FetchPreference();
+        FetchSystem();
 
         //Checks if user has given need permissions
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
@@ -188,19 +215,32 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             }
         });
 
-        /*
-        btnSmallHeart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ChangeHeart();
-            }
-        });
-         */
-
         btnCloseInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 infoLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        fabSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingsLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnCloseSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                settingsLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        btnUpdateSett.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UpdateSys();
+                UpdatePref();
             }
         });
     }
@@ -247,26 +287,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     }
     //----------------------------------------------------------------------------------------------
 
-    private void checkGPS()
-    {
-
-    }
-
-
-    //--------------------------- Method changes appearance of heart -------------------------------
-    private void ChangeHeart() {
-
-        /*
-        //Change appearance of image button based on what the image already is
-        if (btnSmallHeart.getTag() == "1"){
-            btnSmallHeart.setImageResource(R.drawable.ic_small_heart_filled);
-            btnSmallHeart.setTag("2");
-        } else {
-            btnSmallHeart.setImageResource(R.drawable.ic_small_heart_unfilled);
-            btnSmallHeart.setTag("1");
-        } */
-    }
-    //----------------------------------------------------------------------------------------------
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap)
@@ -774,6 +794,125 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         });
     }
     //----------------------------------------------------------------------------------------------
+
+    //------------------------------ Settings - Floating Button ------------------------------------
+    //------------------------ Retrieving settings based on userID in db ---------------------------
+    private void FetchPreference() {
+
+        DatabaseReference newRef = dbUsersRef.child(userID).child("Settings");
+        Query query = newRef.child("Preference");
+
+        //check if current user is logged in
+        if (mAuth != null) {
+
+            //Retrieving setting for preference
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        preference = snapshot.getValue().toString();
+                        SetPreference(preference);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("error", error.getMessage());
+                }
+            });
+        }
+    }
+
+    public void FetchSystem() {
+
+        DatabaseReference newRef = dbUsersRef.child(userID).child("Settings");
+        Query query = newRef.child("System");
+
+        //check if current user is logged in
+        if (mAuth != null) {
+            //Retrieving setting for system
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        system = snapshot.getValue().toString();
+                        SetSystem(system);
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("error", error.getMessage());
+                }
+            });
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------
+
+    //-------------------------- Update the settings in the database -------------------------------
+    private void UpdatePref() {
+
+        DatabaseReference newRef = dbUsersRef.child(userID).child("Settings").child("Preference");
+
+        //Retrieving the content from selected radio button
+        int id = rgPreference.getCheckedRadioButtonId();
+        RadioButton rbPref = (RadioButton) getView().findViewById(id);
+        String pref = rbPref.getText().toString();
+
+        //Setting the new value in database
+        newRef.setValue(pref);
+    }
+
+    private void UpdateSys() {
+
+        DatabaseReference newRef = dbUsersRef.child(userID).child("Settings").child("System");
+
+        //Retrieving the content from selected radio button
+        int id = rgSystem.getCheckedRadioButtonId();
+        RadioButton rbSys = (RadioButton) getView().findViewById(id);
+        String sys = rbSys.getText().toString();
+
+        //Setting the new value in database
+        newRef.setValue(sys);
+
+    }
+    //----------------------------------------------------------------------------------------------
+
+    //---------------------------- Setting preference based on userID in db ------------------------
+    private void SetPreference(String pref) {
+
+        //Setting selection based on userID in db
+        switch (pref) {
+            case "Popular":
+                rgPreference.check(R.id.fab_Pop);
+                break;
+            case "Modern":
+                rgPreference.check(R.id.fab_Modern);
+                break;
+            case "Historical":
+                rgPreference.check(R.id.fab_His);
+                break;
+        }
+    }
+    //----------------------------------------------------------------------------------------------
+
+    //------------------------------- Setting system based on userID in db -------------------------
+    private void SetSystem(String sys) {
+
+        //Setting selection based on userID in db
+        switch (sys) {
+            case "Imperial" :
+                rgSystem.check(R.id.fab_Imperial);
+                break;
+            case "Metric":
+                rgSystem.check(R.id.fab_Metric);
+                break;
+        }
+    }
+    //----------------------------------------------------------------------------------------------
+
+    //----------------------------------------------------------------------------------------------
+
 }
 //References:
 //Helped with getting Google Directions API to work - https://www.youtube.com/watch?v=CSbmlp61zLg&t=169s&ab_channel=CodeWorked
